@@ -12,6 +12,7 @@ try {
 }
 
 // REQUIRES: user is unique && email is unique && parameters meet requirement
+// Returns true if user created
 function createUser(string $username,string $hash,string $email): bool {
     global $conn;
 
@@ -30,6 +31,7 @@ function createUser(string $username,string $hash,string $email): bool {
     return true;
 }
 
+// Returns true if password is correct for the given username
 function checkUser(string $username,string $password): bool {
     global $conn;
 
@@ -50,4 +52,29 @@ function checkUser(string $username,string $password): bool {
     $password_match = password_verify($password,$hash);
     return $password_match;
 }
+
+// // Returns true given username exists
+// function usernameExists(string $username): bool {
+//     global $conn;
+
+//     $stmt = $conn->prepare("SELECT count(*) size FROM users WHERE username=:username");
+//     $stmt->bindParam(':username', $username);
+    
+//     try {
+//         $stmt->execute();
+    
+//     } catch (PDOException $e) {
+//         $echo = 'error occured when logging in, try again'; 
+//         return false;
+//     }
+
+//     $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+//     $count = $arr["count(*)"];
+//     echo $count;
+//     if (count == 0) {
+//         return false;
+//     }
+
+//     return true;
+// }
 ?>
