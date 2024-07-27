@@ -1,7 +1,10 @@
 <?php
-// index.php
+session_start();
 
-// Display a simple web page
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: login.php");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,9 +19,10 @@
 </head>
 <body>
 
-    <h1>Welcome to My PHP Project</h1>
-    <p>This is a simple PHP file to get you started with your project.</p>
-    <p>Current date and time: <?php echo date('Y-m-d H:i:s'); ?></p>
+    <h1>Notes will be displayed here</h1>
+    <form action="logout.php" method="post">
+        <button type="submit">Log out</button>
+    </form>
     
     <br>
     <a href="index.php">index page</a>
