@@ -1,15 +1,32 @@
 <?php
 $servername = "db";
-$username = "root";
-$password = "mariadb";
-$database = "notes";
+$server_username = "root";
+$server_password = "mariadb";
+$server_database = "notes";
 
-$conn = mysqli_connect($servername, $username, $password, $database);
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$server_database", $server_username, $server_password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    echo "Internal Server error " . $e->getMessage();
 }
-echo "Connected successfully";
 
-mysqli_close($conn);
+// REQUIRES: user is unique && email is unique && parameters meet requirement
+function createUser(string $username,string $hash,string $email) {
+    global $conn;
+
+    $stmt = $conn->prepare("INSERT INTO users (username, hash, email) VALUES (:username, :hash, :email)");
+    $stmt->bindParam(':username', $username);
+    $stmt->bindParam(':hash', $hash);
+    $stmt->bindParam(':email', $email);
+    
+    $output = '';
+    try {
+        $output = $stmt->execute();
+    } catch (PDOException $e) {
+        $output = 'error occured when signing up, try again'; 
+    }
+
+    return $output;
+}
 ?>
