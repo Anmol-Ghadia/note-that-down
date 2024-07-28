@@ -3,7 +3,6 @@ services:
     build: ./nginx/
     ports:
       - 80:80
-
     volumes:
         - ./php_code/:/var/www/html/
 

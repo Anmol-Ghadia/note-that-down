@@ -24,7 +24,7 @@ function createUser(string $username,string $hash,string $email): bool {
     try {
         $stmt->execute();
     } catch (PDOException $e) {
-        echo 'error occured when signing up, try again'; 
+        echo 'error occured when signing up, try again'; // TEMP
         return false;
     }
 
@@ -42,7 +42,7 @@ function checkUser(string $username,string $password): bool {
         $stmt->execute();
     
     } catch (PDOException $e) {
-        $echo = 'error occured when logging in, try again'; 
+        $echo = 'error occured when logging in, try again'; // TEMP
         return false;
     }
 
@@ -53,28 +53,27 @@ function checkUser(string $username,string $password): bool {
     return $password_match;
 }
 
-// // Returns true given username exists
-// function usernameExists(string $username): bool {
-//     global $conn;
+// Adds the new note for given username
+function createNote(string $username, Array $data): bool {
+    global $conn;
 
-//     $stmt = $conn->prepare("SELECT count(*) size FROM users WHERE username=:username");
-//     $stmt->bindParam(':username', $username);
+    $content = json_encode($data);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        echo 'JSON Encode Error: ' . json_last_error_msg(); // TEMP
+        return false;
+    }
+
+    $stmt = $conn->prepare("INSERT INTO notes (username, content) VALUES (:username, :content)");
+    $stmt->bindParam(':username', $username);
+    $stmt->bindParam(':content', $content);
     
-//     try {
-//         $stmt->execute();
-    
-//     } catch (PDOException $e) {
-//         $echo = 'error occured when logging in, try again'; 
-//         return false;
-//     }
+    try {
+        $stmt->execute();
+    } catch (PDOException $e) {
+        echo 'error occured when creating note, try again'; // TEMP
+        return false;
+    }
 
-//     $arr = $stmt->fetch(PDO::FETCH_ASSOC);
-//     $count = $arr["count(*)"];
-//     echo $count;
-//     if (count == 0) {
-//         return false;
-//     }
-
-//     return true;
-// }
+    return true;
+}
 ?>

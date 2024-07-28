@@ -19,9 +19,58 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         * { box-sizing: border-box; margin: 0px; padding: 0px;}
         body { font-family: Arial, sans-serif; }
         h1 { color: #333; }
-        #note-container-container { width: 100%; border: 2px solid red; display: flex; justify-content: center; }
-        #note-container { width: 90vw; border: 1px solid green; display: flex; }
-        .note { width: 300px; border: 2px solid #333; padding: 10px; margin: 10px; }
+        
+        #note-container-container { 
+            width: 100%;
+            border: 2px solid red;
+            display: flex;
+            justify-content: center;
+        }
+
+        #note-container {
+            width: 90vw;
+            border: 1px solid green;
+            display: flex;
+        }
+
+        .note {
+            width: 300px;
+            border: 2px solid #333;
+            padding: 10px;
+            margin: 10px;
+        }
+        textarea {
+            border: none;
+            overflow: auto;
+            outline: none;
+
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            -ms-box-shadow: none;
+            -o-box-shadow: none;
+            box-shadow: none;
+
+            -webkit-appearance: none;
+            -moz-apperarance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+
+            resize: none;
+        }
+        
+        #new-note-body-input {
+            width: 100%;
+            height: fit-content;
+            text-align: left;
+            background: #ddd;
+            overflow: hidden;
+            border: none;
+            padding: 5px;
+        }
+        /* #new-note-body-input:focus-visible {
+            outline: none;
+        } */
     </style>
 </head>
 <body>
@@ -41,6 +90,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     <a href="login.php">log in page</a>
     <br>
     <a href="notes.php">notes page</a>
+    <br>
+    <div class="note">
+        <input type="text" name="new-note-title" id="new-note-title-input" placeholder="Create new Note">
+        <textarea name="new-note-body" id="new-note-body-input" placeholder="Add note here" ></textarea>
+        <button onclick="createNote()">create note</button>
+    </div>
 
     <hr>
     <div id="note-container-container">
@@ -133,20 +188,66 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     var iso = new Isotope( '#note-container', {
     });
 
+    // Resizes notes container
     function resizeDiv() {
         const div = document.querySelector('#note-container');
         const widthAvailable = document.documentElement.clientWidth;
         
         const columns =  Math.floor(widthAvailable / noteSize);
         var width = columns * noteSize;
-        console.log(width);
 
         div.style.width = width + 'px';
     }
 
-    resizeDiv();
 
     window.addEventListener('resize', resizeDiv);
+
+    // Sends a create request to api
+    function createNote() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/create-note.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/xml');
+        xhr.setRequestHeader('Accept', 'application/xml');
+
+        const reqTitle = document.querySelector('#new-note-title-input').value;
+        const reqBody = document.querySelector('#new-note-body-input').value;
+        const xmlData = `<request><title>${reqTitle}</title><type>text</type><body>${reqBody}</body></request>`;
+        // console.log(`Request: ${xmlData}`)
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                // console.log(`Response: ${xhr.responseText}`);
+                
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");
+                
+                // TODO !!!
+            } else {
+                console.error('POST Request Failed:', xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error('Network Error');
+        };
+
+        xhr.send(xmlData);
+    }
+
+
+    const newNoteInputBody = document.querySelector('#new-note-body-input');
+    newNoteInputBody.addEventListener('input', resizeNewNoteBody);
+    function resizeNewNoteBody() {
+        newNoteInputBody.style.height = 'auto';
+        var size = newNoteInputBody.scrollHeight + 5;
+        if (size < 200) size = 200; 
+        newNoteInputBody.style.height = size + 'px';
+    }
+
+    window.addEventListener('load', ()=> {
+        resizeNewNoteBody();
+        resizeDiv();
+    })
 
 </script>
 </html>

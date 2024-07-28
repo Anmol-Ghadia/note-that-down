@@ -24,12 +24,22 @@ CREATE TABLE users (
 );
 ```
 
+<!-- ```SQL
+CREATE TABLE notes (
+    note_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(20) NOT NULL,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (username) REFERENCES users(username)
+);
+``` -->
+
 ```SQL
 CREATE TABLE notes (
     note_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(20) NOT NULL,
-    title VARCHAR(255),
-    content TEXT,
+    content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (username) REFERENCES users(username)
