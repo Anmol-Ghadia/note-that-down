@@ -76,4 +76,33 @@ function createNote(string $username, Array $data): bool {
 
     return true;
 }
+
+// Adds the new note for given username
+function readNotes(string $username): Array {
+    global $conn;
+
+    $stmt = $conn->prepare("SELECT * FROM notes WHERE username=:username");
+    $stmt->bindParam(':username', $username);
+    
+    try {
+        $stmt->execute();
+    
+    } catch (PDOException $e) {
+        $echo = 'error occured when logging in, try again'; // TEMP
+        return [];
+    }
+
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $out = [];
+    foreach ($rows as $row) {
+        $out_row = json_decode($row['content']);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            echo 'JSON Decode Error: ' . json_last_error_msg(); // TEMP
+            return [];
+        }
+        array_push($out,$out_row);
+    }
+    return $out;
+}
 ?>

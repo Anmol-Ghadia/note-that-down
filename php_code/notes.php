@@ -3,8 +3,20 @@ session_start();
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
+    return;
 }
 
+include 'sql.php';
+
+$notes_document = '';
+$rows = readNotes($_SESSION['username']);
+foreach ($rows as $row) { // TODO: Add support for other format of notes
+    $notes_document .= '
+    <div class="note">
+        <h3 class="note-title">' . htmlspecialchars($row->title, ENT_QUOTES, 'UTF-8') . '</h3>
+        <p>' . htmlspecialchars($row->body, ENT_QUOTES, 'UTF-8') . '</p>
+    </div>';
+}
 
 
 ?>
@@ -68,9 +80,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             border: none;
             padding: 5px;
         }
-        /* #new-note-body-input:focus-visible {
-            outline: none;
-        } */
     </style>
 </head>
 <body>
@@ -94,13 +103,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     <div class="note">
         <input type="text" name="new-note-title" id="new-note-title-input" placeholder="Create new Note">
         <textarea name="new-note-body" id="new-note-body-input" placeholder="Add note here" ></textarea>
-        <button onclick="createNote()">create note</button>
+        <button onclick="makeNote()">create note</button>
     </div>
 
     <hr>
     <div id="note-container-container">
         <div id="note-container">
-            <div class="note">
+            <!-- <div class="note">
                 <h3 class="note-title">Title here 1</h3>
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laudantium similique incidunt assumenda natus quasi? Laudantium natus officia est, saepe aliquid quas a corrupti aut eos, porro, placeat numquam inventore ex.</p>
             </div>
@@ -176,7 +185,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             <div class="note">
                 <h3 class="note-title">Title here 19</h3>
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laudantium similique incidunt assumenda natus quasi? Laudantium natus officia est, saepe ali Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maxime dolor omnis unde? Laudantium eius non quasi esse aliquid, vitae nostrum consectetur molestiae, fuga necessitatibus officiis repudiandae delectus laboriosam! Ea, suscipit. quid quas a corrupti aut eos, porro, placeat numquam inventore ex. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia voluptatum labore blanditiis obcaecati optio quod cupiditate sunt perferendis laudantium, quos dolorum quam officiis! Corrupti corporis laboriosam, rem et nisi hic.</p>
-            </div>
+            </div> -->
+            <!-- <?php echo $rows; ?> -->
+            <?php echo $notes_document; ?>
         </div>
     </div>
 </body>
@@ -203,7 +214,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     window.addEventListener('resize', resizeDiv);
 
     // Sends a create request to api
-    function createNote() {
+    function makeNote() {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/api/create-note.php', true);
         xhr.setRequestHeader('Content-Type', 'application/xml');
