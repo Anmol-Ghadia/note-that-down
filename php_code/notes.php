@@ -50,7 +50,15 @@ foreach ($rows as $row) { // TODO: Add support for other format of notes
             border: 2px solid #333;
             padding: 10px;
             margin: 10px;
+            background: white;
+            transition: transform 75ms ease-in;
         }
+        
+        /* .note:hover {
+            z-index: 1000;
+            transform: scale(120%); 
+        } */
+
         textarea {
             border: none;
             overflow: auto;
@@ -210,7 +218,6 @@ foreach ($rows as $row) { // TODO: Add support for other format of notes
         div.style.width = width + 'px';
     }
 
-
     window.addEventListener('resize', resizeDiv);
 
     // Sends a create request to api
@@ -232,7 +239,7 @@ foreach ($rows as $row) { // TODO: Add support for other format of notes
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");
                 
-                // TODO !!!
+                appendNoteToDocument(reqTitle, reqBody);
             } else {
                 console.error('POST Request Failed:', xhr.statusText);
             }
@@ -245,6 +252,26 @@ foreach ($rows as $row) { // TODO: Add support for other format of notes
         xhr.send(xmlData);
     }
 
+    // Adds the note as the first note to list of notes
+    function appendNoteToDocument(title, body) {
+        const note = document.createElement('div');
+        note.classList.add('note');
+        
+        const header = document.createElement('h3');
+        header.classList.add('note-title');
+        header.textContent = title;
+        note.appendChild(header);
+        
+        const paragraph = document.createElement('p');
+        paragraph.textContent = body;
+        note.appendChild(paragraph);
+        
+        const noteContainer = document.querySelector('#note-container');
+        noteContainer.prepend(note);
+        
+        iso.prepended(note);
+        iso.layout();
+    }
 
     const newNoteInputBody = document.querySelector('#new-note-body-input');
     newNoteInputBody.addEventListener('input', resizeNewNoteBody);
