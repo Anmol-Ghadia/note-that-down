@@ -54,7 +54,7 @@ function checkUser(string $username,string $password): bool {
 }
 
 // Adds the new note for given username
-function createNote(string $username, Array $data): bool {
+function createNote(string $username, Array $data, String $color): bool {
     global $conn;
 
     $content = json_encode($data);
@@ -63,9 +63,10 @@ function createNote(string $username, Array $data): bool {
         return false;
     }
 
-    $stmt = $conn->prepare("INSERT INTO notes (username, content) VALUES (:username, :content)");
+    $stmt = $conn->prepare("INSERT INTO notes (username, content, color) VALUES (:username, :content, :color)");
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':content', $content);
+    $stmt->bindParam(':color', $color);
     
     try {
         $stmt->execute();
@@ -102,6 +103,7 @@ function readNotes(string $username): Array {
             return [];
         }
         $out_row->id = $row['note_id'];
+        $out_row->color = $row['color'];
         $out_row->created_at = $row['created_at'];
         $out_row->updated_at = $row['updated_at'];
         array_push($out,$out_row);
