@@ -25,12 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_SESSION['username'];
     if ($type === 'text') {
         $body = (string) $xml->body;
+        $color = (string) $xml->color;
         $data = [
             "title" => $title,
             "type" => $type,
             "body" => $body
         ];
-        $success = createNote($username, $data);
+        $success = createNote($username, $data, $color);
         if ($success) {
 
             $response = '<response><status>200 OK</status></response>';
