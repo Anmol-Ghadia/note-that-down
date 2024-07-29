@@ -101,6 +101,9 @@ function readNotes(string $username): Array {
             echo 'JSON Decode Error: ' . json_last_error_msg(); // TEMP
             return [];
         }
+        $out_row->id = $row['note_id'];
+        $out_row->created_at = $row['created_at'];
+        $out_row->updated_at = $row['updated_at'];
         array_push($out,$out_row);
     }
     return $out;
