@@ -82,7 +82,8 @@ function createNote(string $username, Array $data, String $color): bool {
 function readNotes(string $username): Array {
     global $conn;
 
-    $stmt = $conn->prepare("SELECT * FROM notes WHERE username=:username ORDER BY updated_at DESC");
+    // $stmt = $conn->prepare("SELECT * FROM notes WHERE username=:username ORDER BY updated_at DESC");
+    $stmt = $conn->prepare("SELECT * FROM notes WHERE username=:username");
     $stmt->bindParam(':username', $username);
     
     try {
