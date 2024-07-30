@@ -38,7 +38,7 @@ function createNoteDiv(stdClass $data): string {
 
 $notes_document = '';
 $rows = readNotes($_SESSION['username']);
-foreach ($rows as $row) { // TODO: Add support for other format of notes
+foreach ($rows as $row) {
     $notes_document .= createNoteDiv($row);
 }
 
@@ -403,45 +403,51 @@ $note_colors = [
         var size = textArea.scrollHeight + 5;
         if (size < 200) size = 200; 
         textArea.style.height = size + 'px';
+        isotopeUpdate();
     }
 
-    // Populate the notes using data attributes
+    // Populate all the notes using data attributes
     function initializeNotes() {
         var noteDivs = document.getElementsByClassName('note');
         for (var i = 0; i < noteDivs.length; i++) {
             const noteDiv = noteDivs[i];
+            initializeNote(noteDiv);
+        }
+    }
 
-            var noteColor = noteDiv.dataset.noteColor;
-            noteDiv.style.backgroundColor = `#${noteColor}`;
+    // Populate single note using data attributes
+    function initializeNote(noteDiv) {
+
+        var noteColor = noteDiv.dataset.noteColor;
+        noteDiv.style.backgroundColor = `#${noteColor}`;
+        
+        var noteTitle = noteDiv.dataset.noteTitle;
+        const noteTitleElement = noteDiv.querySelector('.note-title');
+        noteTitleElement.value = noteTitle;
+        
+        var noteBody = noteDiv.dataset.noteBody;
+        const noteBodyElement = noteDiv.querySelector('.note-body');
+        noteBodyElement.value = noteBody;
+        expandTextArea(noteBodyElement);
+        noteBodyElement.addEventListener('input',()=>{ expandTextArea(noteBodyElement) });
+        
+        const noteDeleteElement = noteDiv.querySelector('.note-delete-button');
+        noteDeleteElement.addEventListener('click',()=>{ deleteNote(noteDiv) });
+
+        const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
+        for (let i = 0; i < colorDivs.length; i++) {
+            const colorDiv = colorDivs[i];
             
-            var noteTitle = noteDiv.dataset.noteTitle;
-            const noteTitleElement = noteDiv.querySelector('.note-title');
-            noteTitleElement.value = noteTitle;
-            
-            var noteBody = noteDiv.dataset.noteBody;
-            const noteBodyElement = noteDiv.querySelector('.note-body');
-            noteBodyElement.value = noteBody;
-            expandTextArea(noteBodyElement);
-            noteBodyElement.addEventListener('input',()=>{ expandTextArea(noteBodyElement) });
-            
-            const noteDeleteElement = noteDiv.querySelector('.note-delete-button');
-            noteDeleteElement.addEventListener('click',()=>{ deleteNote(noteDiv) });
-
-            const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
-            for (let i = 0; i < colorDivs.length; i++) {
-                const colorDiv = colorDivs[i];
-                
-                if (noteColors[i] == noteColor) {
-                    colorDiv.dataset.colorChecked = "1";
-                }
-
-                colorDiv.style.background = `#${noteColors[i]}`;
-                colorDiv.addEventListener('click', ()=>{onClickHandleColorChange(noteDiv, i)});
-
+            if (noteColors[i] == noteColor) {
+                colorDiv.dataset.colorChecked = "1";
             }
 
-            noteDiv.querySelector('.note-edit-button').addEventListener('click',()=>{ onClickEditNote(noteDiv) });
+            colorDiv.style.background = `#${noteColors[i]}`;
+            colorDiv.addEventListener('click', ()=>{onClickHandleColorChange(noteDiv, i)});
+
         }
+
+        noteDiv.querySelector('.note-edit-button').addEventListener('click',()=>{ onClickEditNote(noteDiv) });
     }
 
     // Handles radio button for note colors
@@ -474,6 +480,7 @@ $note_colors = [
             noteTitleElement.disabled = true;
             noteBodyElement.disabled = true;
         
+            updateNote(noteDiv);
             // TODO !!!
             
             // Send details to update record on backend.
@@ -492,10 +499,89 @@ $note_colors = [
         }
     }
 
+    // Updates the note on backend by reading input fields
+    // if backend succeds, updates data attributes
+    function updateNote(noteDiv) {
+        const reqId = noteDiv.dataset.noteId;
+        const newTitle = noteDiv.querySelector('.note-title').value;
+        const newBody = noteDiv.querySelector('.note-body').value;
+        const newColor = getSelectedNoteColor(noteDiv);
+
+        // Send Update Request
+        const xhr = new XMLHttpRequest();
+        xhr.open('UPDATE', '/api/update-note.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/xml');
+        xhr.setRequestHeader('Accept', 'application/xml');
+
+        const xmlData = 
+        `<request>
+            <id>${reqId}</id>
+            <title>${newTitle}</title>
+            <body>${newBody}</body>
+            <type>text</type>
+            <color>${newColor}</color>
+        </request>`;
+        console.log(`Request: ${xmlData}`)
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                console.log(`Response: ${xhr.responseText}`);
+                
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");
+                
+                noteDiv.dataset.noteTitle = xmlDoc.getElementsByTagName('title')[0].innerHTML;
+                noteDiv.dataset.noteBody = xmlDoc.getElementsByTagName('body')[0].innerHTML;
+                noteDiv.dataset.noteColor = xmlDoc.getElementsByTagName('color')[0].innerHTML;
+                noteDiv.dataset.noteType = xmlDoc.getElementsByTagName('type')[0].innerHTML;
+                noteDiv.dataset.noteTimeUpdated = xmlDoc.getElementsByTagName('timeUpdated')[0].innerHTML;
+                noteDiv.dataset.noteTimeCreated = xmlDoc.getElementsByTagName('timeCreated')[0].innerHTML;
+
+                renderNote(noteDiv);
+            } else {
+                console.error('UPDATE Request Failed:', xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error('Network Error');
+        };
+
+        xhr.send(xmlData);
+        
+    }
+
+    // Updates note using data attributes
+    function renderNote(noteDiv) {
+        console.log(1);
+
+        noteDiv.style.backgroundColor = `#${noteDiv.dataset.noteColor}`;
+
+        noteDiv.querySelector('.note-title').value = noteDiv.dataset.noteTitle
+
+        var noteBody = noteDiv.dataset.noteBody;
+        const noteBodyElement = noteDiv.querySelector('.note-body');
+        noteBodyElement.value = noteBody;
+        expandTextArea(noteBodyElement);
+
+        const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
+        for (let i = 0; i < colorDivs.length; i++) {
+            const colorDiv = colorDivs[i];
+            
+            colorDiv.dataset.colorChecked = "0";
+            if (noteColors[i] == noteDiv.dataset.noteColor) {
+                colorDiv.dataset.colorChecked = "1";
+            }
+        }
+        console.log(2);
+        isotopeUpdate();
+    }
+
     // Returns the selected note color for given note
     function getSelectedNoteColor(noteDiv) {
         const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
         for (let i = 0; i < colorDivs.length; i++) {
+            const colorDiv = colorDivs[i];
             if (colorDiv.dataset.colorChecked == "1") {
                 return noteColors[i];
             }
@@ -511,6 +597,7 @@ $note_colors = [
     })
 
     function isotopeUpdate() {
+        iso.updateSortData();
         iso.arrange({
             sortBy: 'sortValue',
             sortAscending: false // true for ascending, false for descending

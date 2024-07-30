@@ -113,7 +113,7 @@ function readNotes(string $username): Array {
 }
 
 // Returns the Note specified by Id
-function readNoteById(int $note_id): Array {
+function readNoteById(int $note_id): stdClass {
     global $conn;
 
     // $stmt = $conn->prepare("SELECT * FROM notes WHERE username=:username ORDER BY updated_at DESC");
@@ -128,7 +128,19 @@ function readNoteById(int $note_id): Array {
     }
 
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row;
+    
+    $out_row = json_decode($row['content']);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        echo 'JSON Decode Error: ' . json_last_error_msg(); // TEMP
+        return [];
+    }
+    $out_row->id = $row['note_id'];
+    $out_row->username = $row['username'];
+    $out_row->created_at = $row['created_at'];
+    $out_row->updated_at = $row['updated_at'];
+    $out_row->color = $row['color'];
+    
+    return $out_row;
 }
 
 // Returns true if the note is deleted
@@ -143,6 +155,34 @@ function deleteNoteById(int $note_id): bool {
         $stmt->execute();
     } catch (PDOException $e) {
         $echo = 'error occured when logging in, try again'; // TEMP
+        return false;
+    }
+
+    return true;
+}
+
+// Updates a note
+function updateNote(int $note_id, Array $data, String $color): bool {
+    global $conn;
+
+    $content = json_encode($data);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        echo 'JSON Encode Error: ' . json_last_error_msg(); // TEMP
+        return false;
+    }
+
+    $stmt = $conn->prepare(
+        "UPDATE notes
+            SET content = :content, color = :color
+            WHERE note_id=:note_id;");
+    $stmt->bindParam(':content', $content);
+    $stmt->bindParam(':color', $color);
+    $stmt->bindParam(':note_id', $note_id);
+    
+    try {
+        $stmt->execute();
+    } catch (PDOException $e) {
+        echo 'error occured when creating note, try again'; // TEMP
         return false;
     }
 
