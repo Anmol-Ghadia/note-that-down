@@ -24,14 +24,14 @@ function createNoteDiv(stdClass $data): string {
         <textarea type="text" class="note-body" placeholder="Your note here" disabled></textarea>
         <div class="note-toolbar">
             <div class="note-edit-container">
-                <div class="note-delete-button">Del</div>
+                <div class="note-delete-button"></div>
                 <div data-color-checked="0" class="note-color-ball"></div>
                 <div data-color-checked="0" class="note-color-ball"></div>
                 <div data-color-checked="0" class="note-color-ball"></div>
                 <div data-color-checked="0" class="note-color-ball"></div>
                 <div data-color-checked="0" class="note-color-ball"></div>
                 </div>
-            <div class="note-edit-button">Edit</div>
+            <div class="note-edit-button"></div>
         </div>
     </div>'; // Make the note-color-ball procedural in the initializeNotes function instead of hardcoding here
 }
@@ -42,13 +42,13 @@ foreach ($rows as $row) {
     $notes_document .= createNoteDiv($row);
 }
 
-
+$note_width = 325; // pixels
 $note_colors = [
-    0 => "FFDFD6",
-    1 => "B692C2",
-    2 => "80C4E9",
-    3 => "FB6D48",
-    4 => "A6FF96"
+    0 => "ffd6a5",
+    1 => "fdffb6",
+    2 => "caffbf",
+    3 => "a0c4ff",
+    4 => "ffc6ff"
 ]
 
 ?>
@@ -61,7 +61,6 @@ $note_colors = [
     <script src="js/isotope.pkgd.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0px; padding: 0px;}
-        body { font-family: Arial, sans-serif; }
         h1 { color: #333; }
         
         #new-note-color-bar,
@@ -90,6 +89,83 @@ $note_colors = [
         }
 
         /* New Below this */
+        @font-face {
+            font-family: 'Handlee';
+            src: url('public/Handlee-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            margin: min(2vh,2vw);
+            font-family: 'Handlee', Arial, sans-serif;
+            background-color: #222;
+            color: white;
+        }
+
+        #header {
+            display: grid;
+            grid-template-columns: 5vh auto 5vh;
+            user-select: none;
+        }
+        
+        #header p {
+            width: 100%;
+            font-size: 3em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 5vh;
+        }
+
+        #start-new-note-button {
+            position: fixed;
+            top: min(2vh,2vw);
+            left: min(2vh,2vw);
+            width: 5vh;
+            height: 5vh;
+            z-index: 75;
+            background-image: url('public/square-plus-solid.svg');
+        }
+
+        #logout-button {
+            background-image: url('public/right-from-bracket-solid.svg');
+        }
+
+        .control-button {
+            height: 100%;
+            aspect-ratio: 1;
+            background-color: transparent;
+            border:none;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-size 50ms ease-in-out;
+        }
+
+        .control-button:hover,
+        .control-button:active {
+            background-size: 90% 90%;
+        }
+
+        #create-new-note-button {
+            width: 100%;
+            height: 30px;
+            margin-top: 10px;
+            font-size: 20px;
+            font-family: Georgia sans-serif;
+            border-radius: 0px 0px 15px 15px;
+            border: none;
+            background-color: transparent;
+            backdrop-filter: brightness(0.85);
+            color: black;
+        }
+
+        #create-new-note-button:hover,
+        #create-new-note-button:active {
+            backdrop-filter: brightness(0.7);
+            color: white;
+        }
 
         textarea {
             border: none;
@@ -111,9 +187,15 @@ $note_colors = [
             resize: none;
         }
 
+        input:disabled {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            appearance: none;
+        }
+
         #new-note-container {
             position: fixed;
-            border: 1px solid cyan;
             top: 0%;
             left: 0%;
             right: 0%;
@@ -126,51 +208,81 @@ $note_colors = [
             backdrop-filter: brightness(75%);
         }
 
-        #new-note {
-            /* z-index: 100; */
-        }
-
         .hide-new-note-container {
             transform: scale(0%);
         }
 
-        #note-container-wide { 
+        #note-container-wide {
             width: 100%;
-            border: 2px solid red;
             display: flex;
             justify-content: center;
         }
 
         #new-note,
         .note {
-            width: 300px;
-            border: 2px solid #333;
+            width: <?php echo $note_width ?>px;
+            border: 4px solid rgba(255,255,255,0.4);
             padding: 10px;
             margin: 10px;
             background: white;
-            transition: transform 75ms ease-in;
+            border-radius: 20px;
+            transition: box-shadow 150ms ease-out;
         }
         
+        .note:hover {
+            box-shadow: 
+                inset 0 0 0 4px #000,
+                0 0 10px rgba(255, 204, 0, 0.65);
+        }
+
         .note[data-note-unsaved-changes="1"] {
-            border: 4px solid #000;
+            box-shadow: inset 0 0 0 4px #000;
+            border-color: #fff;
         }
         
         #new-note-title,
-        .note-title {
+        .note-title,
+        .note-title:disabled {
+            -webkit-appearance: none;
+            outline: none;
             color: black;
-            padding: 5px;
-            margin: 5px;
+            /* margin: 5px; */
+            padding-left: 10px;
             width: 100%;
-            font-size: x-large;
+            font-family: 'Handlee', serif;
+            font-weight: 600;
+            font-size: 2em;
             background: transparent;
             border: none;
+            overflow-x: scroll;
+        }
+
+        #new-note-title::selection,
+        .note-title::selection {
+            background-color: rgba(100,100,100,0.5); Background color for selected text
+            color: white;
         }
 
         #new-note-body,
         .note-body {
             width: 100%;
             background: transparent;
-            font-size: 1em;
+            font-size: 1.25em;
+            font-family: Georgia sans-serif;
+            color: black;
+        }
+
+        #new-note-body::selection,
+        .note-body::selection {
+            background-color: rgba(100,100,100,0.5);
+            color: white;
+        }
+
+        .note[data-note-unsaved-changes="1"] .note-toolbar,
+        .note:hover .note-toolbar,
+        .note:active .note-toolbar {
+            opacity: 1;
+            visibility: visible;
         }
 
         .note-toolbar {
@@ -179,14 +291,27 @@ $note_colors = [
             display: flex;
             justify-content: right;
             align-items: center;
-            /* border: 1px solid orange; */
+            opacity: 0;
+            transition: opacity 400ms ease-in-out; 
+            visibility: hidden; 
+        }
+
+        @media (pointer: coarse) {
+        /* Styles for touch devices */
+            .note-toolbar {
+                opacity: 1;
+                visibility: visible;
+            }
         }
 
         .note-delete-button {
-            border: 1px solid red;
             height: 100%;
             aspect-ratio: 1;
             overflow: hidden;
+            background-image: url('public/trash-can-solid.svg');
+            background-size: 60% 60%;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .note[data-note-unsaved-changes="1"] .note-edit-container {
@@ -197,13 +322,12 @@ $note_colors = [
             width: 0px;
             overflow: hidden;
             height: 100%;
-            /* border: 1px solid red; */
             display: flex;
             transition: all 150ms linear;
         }
 
         .note-color-ball {
-            margin-left: 10px;
+            margin: 0px 5px;
             height: 100%;
             aspect-ratio: 1;
             border: 1px solid gray;
@@ -212,36 +336,49 @@ $note_colors = [
             transition: all 150ms linear;
         }
 
+        .note-color-ball:hover,
+        .note-color-ball:active {
+            border-radius: 45%;
+            border: 2px solid black;
+        }
+
         .note-color-ball[data-color-checked="1"] {
             border-radius: 40%;
             border: 2px solid black;
         }
 
+        .note[data-note-unsaved-changes="1"] .note-edit-button {
+            background-image: url('public/floppy-disk-regular.svg');
+            background-size: 70% 70%;
+        }
+
         .note-edit-button {
             height: 100%;
             aspect-ratio: 1;
-            background: #888;
+            background-image: url('public/pen-to-square-solid.svg');
+            background-size: 65% 65%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #footer {
+            width: 100%;
+            height: 20vh;
         }
     </style>
 </head>
 <body>
 
-    <h1>Notes will be displayed here</h1>
-    <form action="logout.php" method="post">
-        <button type="submit">Log out</button>
-    </form>
+    <div id='header'>
+        <div></div>
+        <p>Your Noteboard</p>
+        <form action="logout.php" method="post">
+            <button id="logout-button" class='control-button' type="submit"></button>
+        </form>
+    </div>
+    <button id='start-new-note-button' class='control-button' onclick="startNewNote()"></button>
     
-    <br>
-    <a href="index.php">index page</a>
-    <br>
-    <a href="sql.php">example SQL page</a>
-    <br>
-    <a href="signup.php">sign up page</a>
-    <br>
-    <a href="login.php">log in page</a>
-    <br>
-    <a href="notes.php">notes page</a>
-    <br>
+
     <div id="new-note-container" class="hide-new-note-container">
         <div id="new-note">
             <input type="text"  id="new-note-title" placeholder="Create new Note">
@@ -278,27 +415,26 @@ $note_colors = [
                     id="new-note-color-4"
                     style="background-color: #<?php echo $note_colors['4'] ?>"></div>
             </div>
-            <button onclick="submitNewNote()">create note</button>
+            <button id='create-new-note-button' onclick="submitNewNote()">Add Note</button>
         </div>
     </div>
-    <button onclick="startNewNote()">Start New Note +</button>
     
-    <hr>
     <div id="note-container-wide">
         <div id="note-container">
-            <!-- <?php echo $rows; ?> -->
             <?php echo $notes_document; ?>
         </div>
     </div>
+    <div id='footer'></div>
 </body>
 <script>
     const noteColors = <?php echo json_encode($note_colors); ?>;
 
-    // (width + padding + 1px for extra space)
-    const noteSize = 321; // in px 
+    // (width + padding + 5px for extra space)
+    const noteSize = <?php echo $note_width ?> + 20 + 5; // in px 
 
 
     var iso = new Isotope( '#note-container', {
+        transitionDuration: '0.4s',
         getSortData : {
             sortValue: '[data-note-time-updated]'
         }
@@ -407,35 +543,6 @@ $note_colors = [
         }
     }
 
-    // FOR REFERENCE
-//     function createNoteDiv(stdClass $data): string {
-//     return '
-//     <div class="note"
-//         data-note-id="' . htmlspecialchars($data->id, ENT_QUOTES, 'UTF-8') .'"
-//         data-note-color="' . htmlspecialchars($data->color, ENT_QUOTES, 'UTF-8') .'"
-//         data-note-title="' . htmlspecialchars($data->title, ENT_QUOTES, 'UTF-8') .'"
-//         data-note-type="' . htmlspecialchars($data->type, ENT_QUOTES, 'UTF-8') .'"
-//         data-note-body="' . htmlspecialchars($data->body, ENT_QUOTES, 'UTF-8') .'"
-//         data-note-time-created="' . htmlspecialchars($data->created_at, ENT_QUOTES, 'UTF-8') .'"
-//         data-note-time-updated="' . htmlspecialchars($data->updated_at, ENT_QUOTES, 'UTF-8') .'"
-//         data-note-unsaved-changes="0"
-//     >
-//         <input type="text" placeholder="Add Title Here" class="note-title" disabled></input>
-//         <textarea type="text" class="note-body" placeholder="Your note here" disabled></textarea>
-//         <div class="note-toolbar">
-//             <div class="note-edit-container">
-//                 <div class="note-delete-button">Del</div>
-//                 <div data-color-checked="0" class="note-color-ball"></div>
-//                 <div data-color-checked="0" class="note-color-ball"></div>
-//                 <div data-color-checked="0" class="note-color-ball"></div>
-//                 <div data-color-checked="0" class="note-color-ball"></div>
-//                 <div data-color-checked="0" class="note-color-ball"></div>
-//             </div>
-//             <div class="note-edit-button">Edit</div>
-//         </div>
-//     </div>'; // Make the note-color-ball procedural in the initializeNotes function instead of hardcoding here
-// }
-
     // Add a new note to the container
     function appendXMLNoteToDocument(xmlDoc) {
         const note = document.createElement('div');
@@ -466,7 +573,6 @@ $note_colors = [
         noteEditContainer.classList.add('note-edit-container');
 
         const noteDeleteButton = document.createElement('div');
-        noteDeleteButton.innerHTML = 'Del';
         noteDeleteButton.classList.add('note-delete-button');
         noteEditContainer.appendChild(noteDeleteButton);
 
@@ -485,7 +591,6 @@ $note_colors = [
 
         const noteEditButton = document.createElement('div');
         noteEditButton.classList.add('note-edit-button');
-        noteEditButton.innerHTML = 'Edit';
         noteToolbar.appendChild(noteEditButton);
 
         note.appendChild(noteToolbar);
@@ -500,7 +605,7 @@ $note_colors = [
     // Resizes the New note's body size
     function expandTextArea(textArea) {
         textArea.style.height = 'auto';
-        var size = textArea.scrollHeight + 5;
+        var size = textArea.scrollHeight + 15;
         if (size < 200) size = 200; 
         textArea.style.height = size + 'px';
         isotopeUpdate();
@@ -572,28 +677,13 @@ $note_colors = [
             noteTitleElement.disabled = false;
             noteBodyElement.disabled = false;
 
-            // TODO !!!
-
-            noteDiv.querySelector('.note-edit-button').innerHTML = "Save";
             noteDiv.dataset.noteUnsavedChanges = '1';
         } else { // Save data
             noteTitleElement.disabled = true;
             noteBodyElement.disabled = true;
         
             updateNote(noteDiv);
-            // TODO !!!
             
-            // Send details to update record on backend.
-            // Response should be the updatenote.
-            // Use the response data to update data attributes of note
-            // Force isotope to rearrange if necessary
-
-            // noteDiv.dataset.noteTitle = noteDiv.querySelector('.note-title').value;
-            // noteDiv.dataset.noteBody = noteDiv.querySelector('.note-body').value;
-            // noteDiv.dataset.noteColor = getSelectedNoteColor(noteDiv);
-
-            
-            noteDiv.querySelector('.note-edit-button').innerHTML = "Edit";
             noteDiv.dataset.noteUnsavedChanges = '0';
             
         }
