@@ -111,4 +111,41 @@ function readNotes(string $username): Array {
     }
     return $out;
 }
+
+// Returns the Note specified by Id
+function readNoteById(int $note_id): Array {
+    global $conn;
+
+    // $stmt = $conn->prepare("SELECT * FROM notes WHERE username=:username ORDER BY updated_at DESC");
+    $stmt = $conn->prepare("SELECT * FROM notes WHERE note_id=:note_id");
+    $stmt->bindParam(':note_id', $note_id);
+    
+    try {
+        $stmt->execute();    
+    } catch (PDOException $e) {
+        $echo = 'error occured when logging in, try again'; // TEMP
+        return [];
+    }
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row;
+}
+
+// Returns true if the note is deleted
+function deleteNoteById(int $note_id): bool {
+    global $conn;
+
+    // $stmt = $conn->prepare("SELECT * FROM notes WHERE username=:username ORDER BY updated_at DESC");
+    $stmt = $conn->prepare("DELETE FROM notes where note_id=:note_id");
+    $stmt->bindParam(':note_id', $note_id);
+    
+    try {
+        $stmt->execute();
+    } catch (PDOException $e) {
+        $echo = 'error occured when logging in, try again'; // TEMP
+        return false;
+    }
+
+    return true;
+}
 ?>

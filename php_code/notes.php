@@ -23,7 +23,8 @@ function createNoteDiv(stdClass $data): string {
         <input type="text" placeholder="Add Title Here" class="note-title" disabled></input>
         <textarea type="text" class="note-body" placeholder="Your note here" disabled></textarea>
         <div class="note-toolbar">
-            <div class="note-color-container">
+            <div class="note-edit-container">
+                <div class="note-delete-button">Del</div>
                 <div data-color-checked="0" class="note-color-ball"></div>
                 <div data-color-checked="0" class="note-color-ball"></div>
                 <div data-color-checked="0" class="note-color-ball"></div>
@@ -177,11 +178,18 @@ $note_colors = [
             /* border: 1px solid orange; */
         }
 
-        .note[data-note-unsaved-changes="1"] .note-color-container {
+        .note-delete-button {
+            border: 1px solid red;
+            height: 100%;
+            aspect-ratio: 1;
+            overflow: hidden;
+        }
+
+        .note[data-note-unsaved-changes="1"] .note-edit-container {
             width: auto;
         }
 
-        .note-color-container {
+        .note-edit-container {
             width: 0px;
             overflow: hidden;
             height: 100%;
@@ -415,6 +423,9 @@ $note_colors = [
             noteBodyElement.value = noteBody;
             expandTextArea(noteBodyElement);
             noteBodyElement.addEventListener('input',()=>{ expandTextArea(noteBodyElement) });
+            
+            const noteDeleteElement = noteDiv.querySelector('.note-delete-button');
+            noteDeleteElement.addEventListener('click',()=>{ deleteNote(noteDiv) });
 
             const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
             for (let i = 0; i < colorDivs.length; i++) {
@@ -504,6 +515,42 @@ $note_colors = [
             sortBy: 'sortValue',
             sortAscending: false // true for ascending, false for descending
         });
+    }
+
+    // Deletes the note specified by div
+    function deleteNote(noteDiv) {
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('DELETE', '/api/delete-note.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/xml');
+        xhr.setRequestHeader('Accept', 'application/xml');
+
+        const reqId = noteDiv.dataset.noteId;
+        const xmlData = 
+        `<request>
+            <id>${reqId}</id>
+        </request>`;
+        // console.log(`Request: ${xmlData}`)
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                // console.log(`Response: ${xhr.responseText}`);
+                
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");
+                
+                iso.remove(noteDiv);
+                isotopeUpdate();
+            } else {
+                console.error('DELETE Request Failed:', xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error('Network Error');
+        };
+
+        xhr.send(xmlData);
     }
 
 </script>
