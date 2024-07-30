@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $xml = simplexml_load_string($rawPostData);
     
     if ($xml === false) {
-        echo '<response><status>400 Bad Request</status><message>Invalid XML</message></response>';
+        echo '<response><status>400</status><message>Invalid XML</message></response>';
         return;
     }
 
@@ -31,10 +31,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "type" => $type,
             "body" => $body
         ];
-        $success = createNote($username, $data, $color);
-        if ($success) {
+        $new_note_id = createNote($username, $data, $color);
+        if ($new_note_id != -1) {
 
-            $response = '<response><status>200 OK</status></response>';
+            // Return the note
+            $new_note = readNoteById($new_note_id);
+    
+            $response = 
+                '<response>
+                    <status>200 OK</status>
+                    <note>
+                        <id>' . $new_note_id . '</id>
+                        <color>' . $new_note->color . '</color>
+                        <title>' . $new_note->title . '</title>
+                        <type>' . $new_note->type . '</type>
+                        <body>' . $new_note->body . '</body>
+                        <timeUpdated>' . $new_note->updated_at . '</timeUpdated>
+                        <timeCreated>' . $new_note->created_at . '</timeCreated>
+                    </note>    
+                </response>';
             echo $response;
             return;
         }

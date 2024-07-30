@@ -64,64 +64,6 @@ $note_colors = [
         body { font-family: Arial, sans-serif; }
         h1 { color: #333; }
         
-        #note-container-container { 
-            width: 100%;
-            border: 2px solid red;
-            display: flex;
-            justify-content: center;
-        }
-
-        #note-container {
-            width: 90vw;
-            border: 1px solid green;
-            display: flex;
-        }
-
-        .note, 
-        #new-note {
-            width: 300px;
-            border: 2px solid #333;
-            padding: 10px;
-            margin: 10px;
-            background: white;
-            transition: transform 75ms ease-in;
-        }
-        
-        /* .note:hover {
-            z-index: 1000;
-            transform: scale(120%); 
-        } */
-
-        textarea {
-            border: none;
-            overflow: auto;
-            outline: none;
-
-            -webkit-box-shadow: none;
-            -moz-box-shadow: none;
-            -ms-box-shadow: none;
-            -o-box-shadow: none;
-            box-shadow: none;
-
-            -webkit-appearance: none;
-            -moz-apperarance: none;
-            -ms-appearance: none;
-            -o-appearance: none;
-            appearance: none;
-
-            resize: none;
-        }
-        
-        #new-note-body-input {
-            width: 100%;
-            height: fit-content;
-            text-align: left;
-            background: #ddd;
-            overflow: hidden;
-            border: none;
-            padding: 5px;
-        }
-        
         #new-note-color-bar,
         .note-toolbar {
             width: 100%;
@@ -148,11 +90,72 @@ $note_colors = [
         }
 
         /* New Below this */
+
+        textarea {
+            border: none;
+            overflow: auto;
+            outline: none;
+
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            -ms-box-shadow: none;
+            -o-box-shadow: none;
+            box-shadow: none;
+
+            -webkit-appearance: none;
+            -moz-apperarance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+
+            resize: none;
+        }
+
+        #new-note-container {
+            position: fixed;
+            border: 1px solid cyan;
+            top: 0%;
+            left: 0%;
+            right: 0%;
+            bottom: 0%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            overflow: hidden;
+            backdrop-filter: brightness(75%);
+        }
+
+        #new-note {
+            /* z-index: 100; */
+        }
+
+        .hide-new-note-container {
+            transform: scale(0%);
+        }
+
+        #note-container-wide { 
+            width: 100%;
+            border: 2px solid red;
+            display: flex;
+            justify-content: center;
+        }
+
+        #new-note,
+        .note {
+            width: 300px;
+            border: 2px solid #333;
+            padding: 10px;
+            margin: 10px;
+            background: white;
+            transition: transform 75ms ease-in;
+        }
         
         .note[data-note-unsaved-changes="1"] {
             border: 4px solid #000;
         }
         
+        #new-note-title,
         .note-title {
             color: black;
             padding: 5px;
@@ -163,6 +166,7 @@ $note_colors = [
             border: none;
         }
 
+        #new-note-body,
         .note-body {
             width: 100%;
             background: transparent;
@@ -238,46 +242,49 @@ $note_colors = [
     <br>
     <a href="notes.php">notes page</a>
     <br>
-    <div id="new-note">
-        <input type="text" name="new-note-title" id="new-note-title-input" placeholder="Create new Note">
-        <textarea name="new-note-body" id="new-note-body-input" placeholder="Add note here" ></textarea>
-        <div id="new-note-color-bar">
-            <div
-                data-checked="1"
-                onclick="selectColorForNewNote(0)"
-                class="new-note-color"
-                id="new-note-color-0"
-                style="background-color: #<?php echo $note_colors['0'] ?>"></div>
-            <div
-                data-checked="0"
-                onclick="selectColorForNewNote(1)"
-                class="new-note-color"
-                id="new-note-color-1"
-                style="background-color: #<?php echo $note_colors['1'] ?>"></div>
-            <div
-                data-checked="0"
-                onclick="selectColorForNewNote(2)"
-                class="new-note-color"
-                id="new-note-color-2"
-                style="background-color: #<?php echo $note_colors['2'] ?>"></div>
-            <div
-                data-checked="0"
-                onclick="selectColorForNewNote(3)"
-                class="new-note-color"
-                id="new-note-color-3"
-                style="background-color: #<?php echo $note_colors['3'] ?>"></div>
-            <div
-                data-checked="0"
-                onclick="selectColorForNewNote(4)"
-                class="new-note-color"
-                id="new-note-color-4"
-                style="background-color: #<?php echo $note_colors['4'] ?>"></div>
+    <div id="new-note-container" class="hide-new-note-container">
+        <div id="new-note">
+            <input type="text"  id="new-note-title" placeholder="Create new Note">
+            <textarea  id="new-note-body" placeholder="Add note here" ></textarea>
+            <div id="new-note-color-bar">
+                <div
+                    data-checked="1"
+                    onclick="selectColorForNewNote(0)"
+                    class="new-note-color"
+                    id="new-note-color-0"
+                    style="background-color: #<?php echo $note_colors['0'] ?>"></div>
+                <div
+                    data-checked="0"
+                    onclick="selectColorForNewNote(1)"
+                    class="new-note-color"
+                    id="new-note-color-1"
+                    style="background-color: #<?php echo $note_colors['1'] ?>"></div>
+                <div
+                    data-checked="0"
+                    onclick="selectColorForNewNote(2)"
+                    class="new-note-color"
+                    id="new-note-color-2"
+                    style="background-color: #<?php echo $note_colors['2'] ?>"></div>
+                <div
+                    data-checked="0"
+                    onclick="selectColorForNewNote(3)"
+                    class="new-note-color"
+                    id="new-note-color-3"
+                    style="background-color: #<?php echo $note_colors['3'] ?>"></div>
+                <div
+                    data-checked="0"
+                    onclick="selectColorForNewNote(4)"
+                    class="new-note-color"
+                    id="new-note-color-4"
+                    style="background-color: #<?php echo $note_colors['4'] ?>"></div>
+            </div>
+            <button onclick="submitNewNote()">create note</button>
         </div>
     </div>
-    <button onclick="submitNewNote()">create note</button>
-
+    <button onclick="startNewNote()">Start New Note +</button>
+    
     <hr>
-    <div id="note-container-container">
+    <div id="note-container-wide">
         <div id="note-container">
             <!-- <?php echo $rows; ?> -->
             <?php echo $notes_document; ?>
@@ -322,6 +329,23 @@ $note_colors = [
     }
 
 
+    // Handler for click when new note banner is shown
+    function onClickNewNoteBannerShown(event) {
+            if (!document.querySelector('#new-note').contains(event.target)) {
+                document.querySelector('#new-note-container').classList.add('hide-new-note-container');
+                document.removeEventListener('click',onClickNewNoteBannerShown);
+            }
+        }
+
+    // Displays A new note on the screen.
+    function startNewNote() {
+        document.querySelector('#new-note-container').classList.remove('hide-new-note-container');
+        
+        setTimeout(() => {
+            document.addEventListener('click',onClickNewNoteBannerShown)
+        }, 1000);
+    }
+
     // Sends a create request to backend
     function submitNewNote() {
         const xhr = new XMLHttpRequest();
@@ -329,8 +353,8 @@ $note_colors = [
         xhr.setRequestHeader('Content-Type', 'application/xml');
         xhr.setRequestHeader('Accept', 'application/xml');
 
-        const reqTitle = document.querySelector('#new-note-title-input').value;
-        const reqBody = document.querySelector('#new-note-body-input').value;
+        const reqTitle = document.querySelector('#new-note-title').value;
+        const reqBody = document.querySelector('#new-note-body').value;
         const reqColor = getNewNoteSelectedColor();
         const xmlData = 
         `<request>
@@ -343,12 +367,13 @@ $note_colors = [
 
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
-                // console.log(`Response: ${xhr.responseText}`);
+                console.log(`Response: ${xhr.responseText}`);
                 
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");
                 
-                appendNoteToDocument(reqTitle, reqBody, reqColor);
+                appendXMLNoteToDocument(xmlDoc);
+                resetNewNote();
             } else {
                 console.error('POST Request Failed:', xhr.statusText);
             }
@@ -359,6 +384,15 @@ $note_colors = [
         };
 
         xhr.send(xmlData);
+    }
+
+    // sets all fields for new note to empty(initial value)
+    // Also hides it
+    function resetNewNote() {
+        document.querySelector('#new-note-title').value = '';
+        document.querySelector('#new-note-body').value = '';
+        document.querySelector('#new-note-container').classList.add('hide-new-note-container');
+        document.removeEventListener('click',onClickNewNoteBannerShown);
     }
 
     // Returns the string representing color of new note
@@ -373,30 +407,96 @@ $note_colors = [
         }
     }
 
+    // FOR REFERENCE
+//     function createNoteDiv(stdClass $data): string {
+//     return '
+//     <div class="note"
+//         data-note-id="' . htmlspecialchars($data->id, ENT_QUOTES, 'UTF-8') .'"
+//         data-note-color="' . htmlspecialchars($data->color, ENT_QUOTES, 'UTF-8') .'"
+//         data-note-title="' . htmlspecialchars($data->title, ENT_QUOTES, 'UTF-8') .'"
+//         data-note-type="' . htmlspecialchars($data->type, ENT_QUOTES, 'UTF-8') .'"
+//         data-note-body="' . htmlspecialchars($data->body, ENT_QUOTES, 'UTF-8') .'"
+//         data-note-time-created="' . htmlspecialchars($data->created_at, ENT_QUOTES, 'UTF-8') .'"
+//         data-note-time-updated="' . htmlspecialchars($data->updated_at, ENT_QUOTES, 'UTF-8') .'"
+//         data-note-unsaved-changes="0"
+//     >
+//         <input type="text" placeholder="Add Title Here" class="note-title" disabled></input>
+//         <textarea type="text" class="note-body" placeholder="Your note here" disabled></textarea>
+//         <div class="note-toolbar">
+//             <div class="note-edit-container">
+//                 <div class="note-delete-button">Del</div>
+//                 <div data-color-checked="0" class="note-color-ball"></div>
+//                 <div data-color-checked="0" class="note-color-ball"></div>
+//                 <div data-color-checked="0" class="note-color-ball"></div>
+//                 <div data-color-checked="0" class="note-color-ball"></div>
+//                 <div data-color-checked="0" class="note-color-ball"></div>
+//             </div>
+//             <div class="note-edit-button">Edit</div>
+//         </div>
+//     </div>'; // Make the note-color-ball procedural in the initializeNotes function instead of hardcoding here
+// }
+
     // Add a new note to the container
-    function appendNoteToDocument(title, body, color) {
+    function appendXMLNoteToDocument(xmlDoc) {
         const note = document.createElement('div');
         note.classList.add('note');
-        note.style.backgroundColor = `#${color}`;
+        note.dataset.noteId = xmlDoc.querySelector('id').innerHTML;
+        note.dataset.noteColor = xmlDoc.querySelector('color').innerHTML;
+        note.dataset.noteTitle = xmlDoc.querySelector('title').innerHTML;
+        note.dataset.noteBody = xmlDoc.querySelector('body').innerHTML;
+        note.dataset.noteTimeUpdated = xmlDoc.querySelector('timeUpdated').innerHTML;
+        note.dataset.noteTimeCreated = xmlDoc.querySelector('timeCreated').innerHTML;
+        note.dataset.noteUnsavedChanges = "0";
         
-        const header = document.createElement('h3');
-        header.classList.add('note-title');
-        header.textContent = title;
-        note.appendChild(header);
+        const titleElement = document.createElement('input');
+        titleElement.type = "text";
+        titleElement.placeholder = "Add Title Here";
+        titleElement.classList.add('note-title');
+        titleElement.disabled = true;
+        note.appendChild(titleElement);
         
-        const paragraph = document.createElement('p');
-        paragraph.textContent = body;
-        note.appendChild(paragraph);
+        const bodyElement = document.createElement('textarea');
+        bodyElement.type = "text";
+        bodyElement.placeholder = "Your note Here";
+        bodyElement.classList.add('note-body');
+        bodyElement.disabled = true;
+        note.appendChild(bodyElement);
+        
+        const noteEditContainer = document.createElement('div');
+        noteEditContainer.classList.add('note-edit-container');
+
+        const noteDeleteButton = document.createElement('div');
+        noteDeleteButton.innerHTML = 'Del';
+        noteDeleteButton.classList.add('note-delete-button');
+        noteEditContainer.appendChild(noteDeleteButton);
+
+        for (let i = 0; i < noteColors.length; i++) {
+            const colorBall = noteColors[i];
+            
+            const noteColorBall = document.createElement('div');
+            noteColorBall.classList.add('note-color-ball');
+            noteEditContainer.appendChild(noteColorBall);
+            
+        }
+
+        const noteToolbar = document.createElement('div');
+        noteToolbar.classList.add('note-toolbar');
+        noteToolbar.appendChild(noteEditContainer);
+
+        const noteEditButton = document.createElement('div');
+        noteEditButton.classList.add('note-edit-button');
+        noteEditButton.innerHTML = 'Edit';
+        noteToolbar.appendChild(noteEditButton);
+
+        note.appendChild(noteToolbar);
         
         const noteContainer = document.querySelector('#note-container');
         noteContainer.prepend(note);
-        
         iso.prepended(note);
+        initializeNote(note);
         isotopeUpdate();
     }
 
-    const newNoteInputBody = document.querySelector('#new-note-body-input');
-    newNoteInputBody.addEventListener('input', ()=>{ expandTextArea(newNoteInputBody) });
     // Resizes the New note's body size
     function expandTextArea(textArea) {
         textArea.style.height = 'auto';
@@ -530,6 +630,12 @@ $note_colors = [
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");
                 
+                const oldLastUpdated = noteDiv.dataset.noteTimeUpdated;
+                const newLastUpdated = xmlDoc.getElementsByTagName('timeUpdated')[0].innerHTML;
+                if (oldLastUpdated == newLastUpdated) {
+                    return;
+                } 
+
                 noteDiv.dataset.noteTitle = xmlDoc.getElementsByTagName('title')[0].innerHTML;
                 noteDiv.dataset.noteBody = xmlDoc.getElementsByTagName('body')[0].innerHTML;
                 noteDiv.dataset.noteColor = xmlDoc.getElementsByTagName('color')[0].innerHTML;
@@ -552,9 +658,8 @@ $note_colors = [
     }
 
     // Updates note using data attributes
+    // assumes note is already added to isotope
     function renderNote(noteDiv) {
-        console.log(1);
-
         noteDiv.style.backgroundColor = `#${noteDiv.dataset.noteColor}`;
 
         noteDiv.querySelector('.note-title').value = noteDiv.dataset.noteTitle
@@ -573,7 +678,6 @@ $note_colors = [
                 colorDiv.dataset.colorChecked = "1";
             }
         }
-        console.log(2);
         isotopeUpdate();
     }
 
@@ -588,8 +692,11 @@ $note_colors = [
         }
     }
 
+    const newNoteInputBody = document.querySelector('#new-note-body')
+    newNoteInputBody.addEventListener('input', ()=>{expandTextArea(newNoteInputBody) });
     window.addEventListener('resize', resizeNoteContainer);
     window.addEventListener('load', ()=> {
+        expandTextArea(newNoteInputBody); // Expand the text area of new note
         selectColorForNewNote(0);
         initializeNotes(); // populates the notes by reading data attributes
         resizeNoteContainer(); // resizes the notes container to fit exactly by screen size

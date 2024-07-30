@@ -54,13 +54,14 @@ function checkUser(string $username,string $password): bool {
 }
 
 // Adds the new note for given username
-function createNote(string $username, Array $data, String $color): bool {
+// Returns the note id of new note, else -1
+function createNote(string $username, Array $data, String $color): int {
     global $conn;
 
     $content = json_encode($data);
     if (json_last_error() !== JSON_ERROR_NONE) {
         echo 'JSON Encode Error: ' . json_last_error_msg(); // TEMP
-        return false;
+        return -1;
     }
 
     $stmt = $conn->prepare("INSERT INTO notes (username, content, color) VALUES (:username, :content, :color)");
@@ -72,10 +73,13 @@ function createNote(string $username, Array $data, String $color): bool {
         $stmt->execute();
     } catch (PDOException $e) {
         echo 'error occured when creating note, try again'; // TEMP
-        return false;
+        return -1;
     }
 
-    return true;
+    $stmt_two = $conn->query("SELECT note_id FROM notes ORDER BY note_id DESC LIMIT 1");
+    $row = $stmt_two->fetch(PDO::FETCH_ASSOC);
+
+    return (int) $row['note_id'];
 }
 
 // Adds the new note for given username
