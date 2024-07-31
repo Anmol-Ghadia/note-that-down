@@ -80,12 +80,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(to bottom right, #021526, #03346E, #6EACDA);
+            background-color: #03346E;
+            background-image: 
+                            radial-gradient(ellipse at top, #021526 35%, transparent),
+                            radial-gradient(ellipse at center, #03346E, transparent),
+                            linear-gradient(to top, #6EACDA, transparent);
         }
 
         #signup-container {
             position: relative;
-            background: white;
+            background: #eee;
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -125,10 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         input {
+            background: transparent;
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border: 1px solid #ccc;
+            border: 1px solid #888;
             border-radius: 5px;
             transition: border-color 0.3s;
             text-align: center;

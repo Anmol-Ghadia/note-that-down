@@ -99,7 +99,11 @@ $note_colors = [
         body {
             margin: min(2vh,2vw);
             font-family: 'Handlee', Arial, sans-serif;
-            background-color: #222;
+            background-color: #03346E;
+            background-image: 
+                            radial-gradient(ellipse at top, #021526 35%, transparent),
+                            radial-gradient(ellipse at center, #03346E, transparent),
+                            linear-gradient(to top, #6EACDA, transparent);
             color: white;
         }
 
@@ -229,17 +233,29 @@ $note_colors = [
             transition: box-shadow 150ms ease-out;
         }
         
-        .note:hover {
+        .note:hover,
+        .note[data-note-unsaved-changes="1"] {
+            border-color: white;
             box-shadow: 
-                inset 0 0 0 4px #000,
                 0 0 10px rgba(255, 204, 0, 0.65);
+            animation: note-edit-animation 1s linear 0s infinite;
         }
 
-        .note[data-note-unsaved-changes="1"] {
-            box-shadow: inset 0 0 0 4px #000;
-            border-color: #fff;
+        @keyframes note-edit-animation {
+            0% {
+                border-color: white;
+            }
+            70% {
+                border-color: white;
+            }
+            80% {
+                border-color: #777;
+            }
+            100% {
+                border-color: white;
+            }
         }
-        
+
         #new-note-title,
         .note-title,
         .note-title:disabled {
@@ -529,6 +545,8 @@ $note_colors = [
         document.querySelector('#new-note-body').value = '';
         document.querySelector('#new-note-container').classList.add('hide-new-note-container');
         document.removeEventListener('click',onClickNewNoteBannerShown);
+        expandTextArea(document.querySelector('#new-note-body'));
+        console.log(document.querySelector('#new-note-body'))
     }
 
     // Returns the string representing color of new note
