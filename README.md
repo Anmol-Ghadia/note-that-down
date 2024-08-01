@@ -24,6 +24,7 @@ CREATE TABLE users (
 );
 ```
 
+
 <!-- ```SQL
 CREATE TABLE notes (
     note_id INT AUTO_INCREMENT PRIMARY KEY,

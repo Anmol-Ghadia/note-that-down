@@ -7,6 +7,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 }
 
 include 'sql.php';
+include 'helpers/notes_params.php';
 
 function createNoteDiv(stdClass $data): string {
     return '
@@ -42,15 +43,6 @@ foreach ($rows as $row) {
     $notes_document .= createNoteDiv($row);
 }
 
-$note_width = 325; // pixels
-$note_colors = [
-    0 => "ffd6a5",
-    1 => "fdffb6",
-    2 => "caffbf",
-    3 => "a0c4ff",
-    4 => "ffc6ff"
-]
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,36 +51,11 @@ $note_colors = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My PHP Project</title>
     <script src="js/isotope.pkgd.min.js"></script>
+    <link rel="stylesheet" href="public/note.css">
     <style>
         * { box-sizing: border-box; margin: 0px; padding: 0px;}
         h1 { color: #333; }
-        
-        #new-note-color-bar,
-        .note-toolbar {
-            width: 100%;
-            height: 30px;
-            display: flex;
-            justify-content: right;
-            align-items: center;
-        }
 
-        .new-note-color {
-            margin-left: 10px;
-            height: 100%;
-            aspect-ratio: 1;
-            border: 1px solid gray;
-            filter: brightness(110%);
-            border-radius: 50%;
-            transition: all 150ms linear;
-        }
-        
-        
-        .new-note-color[data-checked="1"] {
-            border-radius: 40%;
-            border: 2px solid black;
-        }
-
-        /* New Below this */
         @font-face {
             font-family: 'Handlee';
             src: url('public/Handlee-Regular.ttf') format('truetype');
@@ -97,14 +64,23 @@ $note_colors = [
         }
 
         body {
-            margin: min(2vh,2vw);
             font-family: 'Handlee', Arial, sans-serif;
             background-color: #03346E;
             background-image: 
                             radial-gradient(ellipse at top, #021526 35%, transparent),
                             radial-gradient(ellipse at center, #03346E, transparent),
                             linear-gradient(to top, #6EACDA, transparent);
+            background-size: 100vw 100%;
             color: white;
+            overflow: hidden;
+        }
+
+        main {
+            width: 100vw;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            padding: min(2vh,2vw);
         }
 
         #header {
@@ -170,34 +146,7 @@ $note_colors = [
             backdrop-filter: brightness(0.7);
             color: white;
         }
-
-        textarea {
-            border: none;
-            overflow: auto;
-            outline: none;
-
-            -webkit-box-shadow: none;
-            -moz-box-shadow: none;
-            -ms-box-shadow: none;
-            -o-box-shadow: none;
-            box-shadow: none;
-
-            -webkit-appearance: none;
-            -moz-apperarance: none;
-            -ms-appearance: none;
-            -o-appearance: none;
-            appearance: none;
-
-            resize: none;
-        }
-
-        input:disabled {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            -ms-appearance: none;
-            appearance: none;
-        }
-
+        
         #new-note-container {
             position: fixed;
             top: 0%;
@@ -212,8 +161,16 @@ $note_colors = [
             backdrop-filter: brightness(75%);
         }
 
-        .hide-new-note-container {
-            transform: scale(0%);
+        #new-note:hover {
+            animation: none 1s linear 0s infinite;
+        }
+
+        #new-note-edit-container {
+            width: 100%;
+            height: 30px;
+            display: flex;
+            justify-content: right;
+            align-items: center;
         }
 
         #note-container-wide {
@@ -222,168 +179,39 @@ $note_colors = [
             justify-content: center;
         }
 
-        #new-note,
+        /* #new-note, */
         .note {
             width: <?php echo $note_width ?>px;
-            border: 4px solid rgba(255,255,255,0.4);
-            padding: 10px;
-            margin: 10px;
-            background: white;
-            border-radius: 20px;
-            transition: box-shadow 150ms ease-out;
-        }
-        
-        .note:hover,
-        .note[data-note-unsaved-changes="1"] {
-            border-color: white;
-            box-shadow: 
-                0 0 10px rgba(255, 204, 0, 0.65);
-            animation: note-edit-animation 1s linear 0s infinite;
-        }
-
-        @keyframes note-edit-animation {
-            0% {
-                border-color: white;
-            }
-            70% {
-                border-color: white;
-            }
-            80% {
-                border-color: #777;
-            }
-            100% {
-                border-color: white;
-            }
-        }
-
-        #new-note-title,
-        .note-title,
-        .note-title:disabled {
-            -webkit-appearance: none;
-            outline: none;
-            color: black;
-            /* margin: 5px; */
-            padding-left: 10px;
-            width: 100%;
-            font-family: 'Handlee', serif;
-            font-weight: 600;
-            font-size: 2em;
-            background: transparent;
-            border: none;
-            overflow-x: scroll;
-        }
-
-        #new-note-title::selection,
-        .note-title::selection {
-            background-color: rgba(100,100,100,0.5); Background color for selected text
-            color: white;
-        }
-
-        #new-note-body,
-        .note-body {
-            width: 100%;
-            background: transparent;
-            font-size: 1.25em;
-            font-family: Georgia sans-serif;
-            color: black;
-        }
-
-        #new-note-body::selection,
-        .note-body::selection {
-            background-color: rgba(100,100,100,0.5);
-            color: white;
-        }
-
-        .note[data-note-unsaved-changes="1"] .note-toolbar,
-        .note:hover .note-toolbar,
-        .note:active .note-toolbar {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .note-toolbar {
-            width: 100%;
-            height: 30px;
-            display: flex;
-            justify-content: right;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 400ms ease-in-out; 
-            visibility: hidden; 
-        }
-
-        @media (pointer: coarse) {
-        /* Styles for touch devices */
-            .note-toolbar {
-                opacity: 1;
-                visibility: visible;
-            }
-        }
-
-        .note-delete-button {
-            height: 100%;
-            aspect-ratio: 1;
-            overflow: hidden;
-            background-image: url('public/trash-can-solid.svg');
-            background-size: 60% 60%;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .note[data-note-unsaved-changes="1"] .note-edit-container {
-            width: auto;
-        }
-
-        .note-edit-container {
-            width: 0px;
-            overflow: hidden;
-            height: 100%;
-            display: flex;
-            transition: all 150ms linear;
-        }
-
-        .note-color-ball {
-            margin: 0px 5px;
-            height: 100%;
-            aspect-ratio: 1;
-            border: 1px solid gray;
-            filter: brightness(110%);
-            border-radius: 50%;
-            transition: all 150ms linear;
-        }
-
-        .note-color-ball:hover,
-        .note-color-ball:active {
-            border-radius: 45%;
-            border: 2px solid black;
-        }
-
-        .note-color-ball[data-color-checked="1"] {
-            border-radius: 40%;
-            border: 2px solid black;
-        }
-
-        .note[data-note-unsaved-changes="1"] .note-edit-button {
-            background-image: url('public/floppy-disk-regular.svg');
-            background-size: 70% 70%;
-        }
-
-        .note-edit-button {
-            height: 100%;
-            aspect-ratio: 1;
-            background-image: url('public/pen-to-square-solid.svg');
-            background-size: 65% 65%;
-            background-position: center;
-            background-repeat: no-repeat;
         }
 
         #footer {
             width: 100%;
             height: 20vh;
         }
+
+        main::-webkit-scrollbar {
+            width: 1vw;
+        }
+
+        main::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        main::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border: 0px solid black;
+            border-radius: 1vw;
+            height: 35vh;
+            opacity: 0;
+        }
+        
+        main::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.5);
+        }
     </style>
 </head>
 <body>
+    <main>
 
     <div id='header'>
         <div></div>
@@ -396,39 +224,34 @@ $note_colors = [
     
 
     <div id="new-note-container" class="hide-new-note-container">
-        <div id="new-note">
-            <input type="text"  id="new-note-title" placeholder="Create new Note">
-            <textarea  id="new-note-body" placeholder="Add note here" ></textarea>
-            <div id="new-note-color-bar">
+        <div id="new-note" class="note">
+            <input type="text"  id="new-note-title" class="note-title" placeholder="Create new Note">
+            <textarea  id="new-note-body" class="note-body" placeholder="Add note here" ></textarea>
+            <div id="new-note-edit-container" class="note-edit-container">
                 <div
                     data-checked="1"
                     onclick="selectColorForNewNote(0)"
-                    class="new-note-color"
-                    id="new-note-color-0"
+                    class="new-note-color-ball note-color-ball"
                     style="background-color: #<?php echo $note_colors['0'] ?>"></div>
                 <div
                     data-checked="0"
                     onclick="selectColorForNewNote(1)"
-                    class="new-note-color"
-                    id="new-note-color-1"
+                    class="new-note-color-ball note-color-ball"
                     style="background-color: #<?php echo $note_colors['1'] ?>"></div>
                 <div
                     data-checked="0"
                     onclick="selectColorForNewNote(2)"
-                    class="new-note-color"
-                    id="new-note-color-2"
+                    class="new-note-color-ball note-color-ball"
                     style="background-color: #<?php echo $note_colors['2'] ?>"></div>
                 <div
                     data-checked="0"
                     onclick="selectColorForNewNote(3)"
-                    class="new-note-color"
-                    id="new-note-color-3"
+                    class="new-note-color-ball note-color-ball"
                     style="background-color: #<?php echo $note_colors['3'] ?>"></div>
                 <div
                     data-checked="0"
                     onclick="selectColorForNewNote(4)"
-                    class="new-note-color"
-                    id="new-note-color-4"
+                    class="new-note-color-ball note-color-ball"
                     style="background-color: #<?php echo $note_colors['4'] ?>"></div>
             </div>
             <button id='create-new-note-button' onclick="submitNewNote()">Add Note</button>
@@ -441,10 +264,11 @@ $note_colors = [
         </div>
     </div>
     <div id='footer'></div>
+    </main>
 </body>
+<script src="public/note.js"></script>
 <script>
     const noteColors = <?php echo json_encode($note_colors); ?>;
-
     // (width + padding + 5px for extra space)
     const noteSize = <?php echo $note_width ?> + 20 + 5; // in px 
 
@@ -458,18 +282,12 @@ $note_colors = [
 
     // Resizes the note container to fit exactly inside the viewport
     function resizeNoteContainer() {
-        const div = document.querySelector('#note-container');
-        const widthAvailable = document.documentElement.clientWidth;
-        
-        const columns =  Math.floor(widthAvailable / noteSize);
-        var width = columns * noteSize;
-
-        div.style.width = width + 'px';
+        resizeNoteContainerHelper(noteSize,document.documentElement.clientWidth,'#note-container');
     }
 
     // Sets the color for new note
     function selectColorForNewNote(newColor) {
-        const colors = document.querySelectorAll('.new-note-color');
+        const colors = document.querySelectorAll('.new-note-color-ball');
         for (let i = 0; i < colors.length; i++) {
             const colorBox = colors[i];
             colorBox.dataset.checked = "0";
@@ -524,7 +342,14 @@ $note_colors = [
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(xhr.responseText, "application/xml");
                 
-                appendXMLNoteToDocument(xmlDoc);
+                const note = getNoteElementFromXML(xmlDoc);
+                // Add note to container
+                
+                document.querySelector('#note-container').prepend(note);
+                iso.prepended(note);
+                initializeNote(note);
+                isotopeUpdate();
+                // Reset the new note element
                 resetNewNote();
             } else {
                 console.error('POST Request Failed:', xhr.statusText);
@@ -551,7 +376,7 @@ $note_colors = [
 
     // Returns the string representing color of new note
     function getNewNoteSelectedColor() {
-        const colors = document.querySelectorAll('.new-note-color');
+        const colors = document.querySelectorAll('.new-note-color-ball');
         for (let i = 0; i < colors.length; i++) {
             const colorDiv = colors[i];
             if (colorDiv.dataset.checked == "1") {
@@ -561,78 +386,74 @@ $note_colors = [
         }
     }
 
-    // Add a new note to the container
-    function appendXMLNoteToDocument(xmlDoc) {
-        const note = document.createElement('div');
-        note.classList.add('note');
-        note.dataset.noteId = xmlDoc.querySelector('id').innerHTML;
-        note.dataset.noteColor = xmlDoc.querySelector('color').innerHTML;
-        note.dataset.noteTitle = xmlDoc.querySelector('title').innerHTML;
-        note.dataset.noteBody = xmlDoc.querySelector('body').innerHTML;
-        note.dataset.noteTimeUpdated = xmlDoc.querySelector('timeUpdated').innerHTML;
-        note.dataset.noteTimeCreated = xmlDoc.querySelector('timeCreated').innerHTML;
-        note.dataset.noteUnsavedChanges = "0";
+    // // Add a new note to the container
+    // function getNoteElementFromXML(xmlDoc) {
+    //     const note = document.createElement('div');
+    //     note.classList.add('note');
+    //     note.dataset.noteId = xmlDoc.querySelector('id').innerHTML;
+    //     note.dataset.noteColor = xmlDoc.querySelector('color').innerHTML;
+    //     note.dataset.noteTitle = xmlDoc.querySelector('title').innerHTML;
+    //     note.dataset.noteBody = xmlDoc.querySelector('body').innerHTML;
+    //     note.dataset.noteTimeUpdated = xmlDoc.querySelector('timeUpdated').innerHTML;
+    //     note.dataset.noteTimeCreated = xmlDoc.querySelector('timeCreated').innerHTML;
+    //     note.dataset.noteUnsavedChanges = "0";
         
-        const titleElement = document.createElement('input');
-        titleElement.type = "text";
-        titleElement.placeholder = "Add Title Here";
-        titleElement.classList.add('note-title');
-        titleElement.disabled = true;
-        note.appendChild(titleElement);
+    //     const titleElement = document.createElement('input');
+    //     titleElement.type = "text";
+    //     titleElement.placeholder = "Add Title Here";
+    //     titleElement.classList.add('note-title');
+    //     titleElement.disabled = true;
+    //     note.appendChild(titleElement);
         
-        const bodyElement = document.createElement('textarea');
-        bodyElement.type = "text";
-        bodyElement.placeholder = "Your note Here";
-        bodyElement.classList.add('note-body');
-        bodyElement.disabled = true;
-        note.appendChild(bodyElement);
+    //     const bodyElement = document.createElement('textarea');
+    //     bodyElement.type = "text";
+    //     bodyElement.placeholder = "Your note Here";
+    //     bodyElement.classList.add('note-body');
+    //     bodyElement.disabled = true;
+    //     note.appendChild(bodyElement);
         
-        const noteEditContainer = document.createElement('div');
-        noteEditContainer.classList.add('note-edit-container');
+    //     const noteEditContainer = document.createElement('div');
+    //     noteEditContainer.classList.add('note-edit-container');
 
-        const noteDeleteButton = document.createElement('div');
-        noteDeleteButton.classList.add('note-delete-button');
-        noteEditContainer.appendChild(noteDeleteButton);
+    //     const noteDeleteButton = document.createElement('div');
+    //     noteDeleteButton.classList.add('note-delete-button');
+    //     noteEditContainer.appendChild(noteDeleteButton);
 
-        for (let i = 0; i < noteColors.length; i++) {
-            const colorBall = noteColors[i];
+    //     for (let i = 0; i < noteColors.length; i++) {
+    //         const colorBall = noteColors[i];
             
-            const noteColorBall = document.createElement('div');
-            noteColorBall.classList.add('note-color-ball');
-            noteEditContainer.appendChild(noteColorBall);
+    //         const noteColorBall = document.createElement('div');
+    //         noteColorBall.classList.add('note-color-ball');
+    //         noteEditContainer.appendChild(noteColorBall);
             
-        }
+    //     }
 
-        const noteToolbar = document.createElement('div');
-        noteToolbar.classList.add('note-toolbar');
-        noteToolbar.appendChild(noteEditContainer);
+    //     const noteToolbar = document.createElement('div');
+    //     noteToolbar.classList.add('note-toolbar');
+    //     noteToolbar.appendChild(noteEditContainer);
 
-        const noteEditButton = document.createElement('div');
-        noteEditButton.classList.add('note-edit-button');
-        noteToolbar.appendChild(noteEditButton);
+    //     const noteEditButton = document.createElement('div');
+    //     noteEditButton.classList.add('note-edit-button');
+    //     noteToolbar.appendChild(noteEditButton);
 
-        note.appendChild(noteToolbar);
+    //     note.appendChild(noteToolbar);
         
-        const noteContainer = document.querySelector('#note-container');
-        noteContainer.prepend(note);
-        iso.prepended(note);
-        initializeNote(note);
-        isotopeUpdate();
-    }
+    //     return note;
+    // }
 
-    // Resizes the New note's body size
-    function expandTextArea(textArea) {
-        textArea.style.height = 'auto';
-        var size = textArea.scrollHeight + 15;
-        if (size < 200) size = 200; 
-        textArea.style.height = size + 'px';
-        isotopeUpdate();
-    }
+    // // Resizes the New note's body size
+    // function expandTextArea(textArea) {
+    //     textArea.style.height = 'auto';
+    //     var size = textArea.scrollHeight + 15;
+    //     if (size < 200) size = 200; 
+    //     textArea.style.height = size + 'px';
+    //     isotopeUpdate();
+    // }
 
     // Populate all the notes using data attributes
     function initializeNotes() {
         var noteDivs = document.getElementsByClassName('note');
-        for (var i = 0; i < noteDivs.length; i++) {
+        for (var i = 1; i < noteDivs.length; i++) {
             const noteDiv = noteDivs[i];
             initializeNote(noteDiv);
         }
@@ -640,72 +461,80 @@ $note_colors = [
 
     // Populate single note using data attributes
     function initializeNote(noteDiv) {
-
-        var noteColor = noteDiv.dataset.noteColor;
-        noteDiv.style.backgroundColor = `#${noteColor}`;
-        
-        var noteTitle = noteDiv.dataset.noteTitle;
-        const noteTitleElement = noteDiv.querySelector('.note-title');
-        noteTitleElement.value = noteTitle;
-        
-        var noteBody = noteDiv.dataset.noteBody;
-        const noteBodyElement = noteDiv.querySelector('.note-body');
-        noteBodyElement.value = noteBody;
-        expandTextArea(noteBodyElement);
-        noteBodyElement.addEventListener('input',()=>{ expandTextArea(noteBodyElement) });
-        
-        const noteDeleteElement = noteDiv.querySelector('.note-delete-button');
-        noteDeleteElement.addEventListener('click',()=>{ deleteNote(noteDiv) });
-
-        const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
-        for (let i = 0; i < colorDivs.length; i++) {
-            const colorDiv = colorDivs[i];
-            
-            if (noteColors[i] == noteColor) {
-                colorDiv.dataset.colorChecked = "1";
-            }
-
-            colorDiv.style.background = `#${noteColors[i]}`;
-            colorDiv.addEventListener('click', ()=>{onClickHandleColorChange(noteDiv, i)});
-
-        }
-
-        noteDiv.querySelector('.note-edit-button').addEventListener('click',()=>{ onClickEditNote(noteDiv) });
+        initializeNoteHelper(
+            noteDiv,
+            ()=>{ deleteNote(noteDiv) },
+            noteColors,
+            updateNote)
     }
+    // // Populate single note using data attributes
+    // function initializeNote(noteDiv) {
 
-    // Handles radio button for note colors
-    function onClickHandleColorChange(noteDiv, newColorNumber) {
-        const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
-        for (let i = 0; i < colorDivs.length; i++) {
-            const colorDiv = colorDivs[i];
-            colorDiv.dataset.colorChecked = "0";
-            if (i == newColorNumber) {
-                colorDiv.dataset.colorChecked = "1";
-                noteDiv.style.background = `#${noteColors[i]}`;
-            }
-        }
-    }
-
-    // Handles click on edit button
-    function onClickEditNote(noteDiv) {
-        const noteTitleElement = noteDiv.querySelector('.note-title');
-        const noteBodyElement = noteDiv.querySelector('.note-body');
-
-        if (noteDiv.dataset.noteUnsavedChanges == "0") { // start Edit mode 
-            noteTitleElement.disabled = false;
-            noteBodyElement.disabled = false;
-
-            noteDiv.dataset.noteUnsavedChanges = '1';
-        } else { // Save data
-            noteTitleElement.disabled = true;
-            noteBodyElement.disabled = true;
+    //     var noteColor = noteDiv.dataset.noteColor;
+    //     noteDiv.style.backgroundColor = `#${noteColor}`;
         
-            updateNote(noteDiv);
+    //     var noteTitle = noteDiv.dataset.noteTitle;
+    //     const noteTitleElement = noteDiv.querySelector('.note-title');
+    //     noteTitleElement.value = noteTitle;
+        
+    //     var noteBody = noteDiv.dataset.noteBody;
+    //     const noteBodyElement = noteDiv.querySelector('.note-body');
+    //     noteBodyElement.value = noteBody;
+    //     expandTextArea(noteBodyElement);
+    //     noteBodyElement.addEventListener('input',()=>{ expandTextArea(noteBodyElement) });
+        
+    //     const noteDeleteElement = noteDiv.querySelector('.note-delete-button');
+    //     noteDeleteElement.addEventListener('click',()=>{ deleteNote(noteDiv) });
+
+    //     const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
+    //     for (let i = 0; i < colorDivs.length; i++) {
+    //         const colorDiv = colorDivs[i];
             
-            noteDiv.dataset.noteUnsavedChanges = '0';
+    //         if (noteColors[i] == noteColor) {
+    //             colorDiv.dataset.colorChecked = "1";
+    //         }
+
+    //         colorDiv.style.background = `#${noteColors[i]}`;
+    //         colorDiv.addEventListener('click', ()=>{onClickHandleColorChange(noteDiv, i)});
+
+    //     }
+
+    //     noteDiv.querySelector('.note-edit-button').addEventListener('click',()=>{ onClickEditNote(noteDiv) });
+    // }
+
+    // // Handles radio button for note colors
+    // function onClickHandleColorChange(noteDiv, newColorNumber) {
+    //     const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
+    //     for (let i = 0; i < colorDivs.length; i++) {
+    //         const colorDiv = colorDivs[i];
+    //         colorDiv.dataset.colorChecked = "0";
+    //         if (i == newColorNumber) {
+    //             colorDiv.dataset.colorChecked = "1";
+    //             noteDiv.style.background = `#${noteColors[i]}`;
+    //         }
+    //     }
+    // }
+
+    // // Handles click on edit button
+    // function onClickEditNote(noteDiv) {
+    //     const noteTitleElement = noteDiv.querySelector('.note-title');
+    //     const noteBodyElement = noteDiv.querySelector('.note-body');
+
+    //     if (noteDiv.dataset.noteUnsavedChanges == "0") { // start Edit mode 
+    //         noteTitleElement.disabled = false;
+    //         noteBodyElement.disabled = false;
+
+    //         noteDiv.dataset.noteUnsavedChanges = '1';
+    //     } else { // Save data
+    //         noteTitleElement.disabled = true;
+    //         noteBodyElement.disabled = true;
+        
+    //         updateNote(noteDiv);
             
-        }
-    }
+    //         noteDiv.dataset.noteUnsavedChanges = '0';
+            
+    //     }
+    // }
 
     // Updates the note on backend by reading input fields
     // if backend succeds, updates data attributes

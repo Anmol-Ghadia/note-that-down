@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <note>
+        <title>This is the first Note</title>
+        <body>This is the body for first note</body>
+        <color>555555</color>
+        <id></id>
+        <timeUpdated></timeUpdated>
+        <timeCreated></timeCreated>
+    </note>
+    <note>
+        <title>This is the second Note</title>
+        <body>This is the body for second note</body>
+        <color>665555</color>
+        <id></id>
+        <timeUpdated></timeUpdated>
+        <timeCreated></timeCreated>
+    </note>
+</response>
