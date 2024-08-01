@@ -68,6 +68,62 @@ function getNoteElementFromXML(xmlDoc) {
     return note;
 }
 
+// Parse a new single note element with no intial values
+function getEmptyNoteElement(noteColors,currentNoteColor) {
+    const note = document.createElement('div');
+    note.classList.add('note');
+    note.dataset.noteId = '0'
+    note.dataset.noteColor = `${noteColors[Math.floor(Math.random()*(noteColors.length-1))]}`;
+    // note.dataset.noteColor = `${currentNoteColor}`;
+    note.dataset.noteTitle = '';
+    note.dataset.noteBody = '';
+    note.dataset.noteTimeUpdated = '';
+    note.dataset.noteTimeCreated = '';
+    note.dataset.noteUnsavedChanges = '0';
+    
+    const titleElement = document.createElement('input');
+    titleElement.type = "text";
+    titleElement.placeholder = "Add Title Here";
+    titleElement.classList.add('note-title');
+    titleElement.disabled = true;
+    note.appendChild(titleElement);
+    
+    const bodyElement = document.createElement('textarea');
+    bodyElement.type = "text";
+    bodyElement.placeholder = "Your note Here";
+    bodyElement.classList.add('note-body');
+    bodyElement.disabled = true;
+    note.appendChild(bodyElement);
+    
+    const noteEditContainer = document.createElement('div');
+    noteEditContainer.classList.add('note-edit-container');
+
+    const noteDeleteButton = document.createElement('div');
+    noteDeleteButton.classList.add('note-delete-button');
+    noteEditContainer.appendChild(noteDeleteButton);
+
+    for (let i = 0; i < noteColors.length; i++) {
+        const colorBall = noteColors[i];
+        
+        const noteColorBall = document.createElement('div');
+        noteColorBall.classList.add('note-color-ball');
+        noteEditContainer.appendChild(noteColorBall);
+        
+    }
+
+    const noteToolbar = document.createElement('div');
+    noteToolbar.classList.add('note-toolbar');
+    noteToolbar.appendChild(noteEditContainer);
+
+    const noteEditButton = document.createElement('div');
+    noteEditButton.classList.add('note-edit-button');
+    noteToolbar.appendChild(noteEditButton);
+
+    note.appendChild(noteToolbar);
+    
+    return note;
+}
+
 // Populates a single note using data attributes
 // noteDiv (HTMLElement): The note(HTMLElement) to be initialized
 // deleteHandler (function): function that handles delete operation (Delete is handled externally)
@@ -151,4 +207,9 @@ function onClickEditNote(noteDiv, saveDataFunction) {
         noteDiv.dataset.noteUnsavedChanges = '0';
         
     }
+}
+
+// Pauses execution for given milliseconds
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

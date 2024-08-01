@@ -30,27 +30,98 @@ include 'helpers/notes_params.php';
             background-image: linear-gradient(to top right, #021526, #03346E, #6EACDA);
             background-size: 200% 100%;
             background-position: 0% 50%;
-
+            width: 100vw;
             height: 100vh;
-            overflow: hidden;
-            display: grid;
-            grid-template-columns: 100% 0%;
             font-family: Georgia, sans;
+            overflow: hidden;
+            padding: 0px;
+            margin: 0px;
         }
 
-        body[data-stage="1"] {
-            animation: body-grid-column-expansion 4s;
-            animation-fill-mode: forwards;
+        main {
+            width: 100%;
+            height: 100%;
+            padding: 0px;
+            margin: 0px;
+            /* width: 100vw;
+            height: 100vh; */
+            display: grid;
+            /* padding: min(2vh,2vw); */
         }
 
-        @keyframes body-grid-column-expansion {
-            0% {
-                grid-template-columns: 100% 0%;
-                background-position: 0% 50%;
+        @media (orientation: portrait) {
+            main {
+                grid-template-rows: 100% 0%;
+                overflow-x: hidden;
+                overflow-y: scroll;
             }
-            100% {
-                grid-template-columns: 50% 50%;
-                background-position: 100% 50%;
+
+            main[data-stage="1"] {
+                animation: body-grid-row-expansion 4s;
+                animation-fill-mode: forwards;
+            }
+
+            @keyframes body-grid-row-expansion {
+                0% {
+                    grid-template-rows: 100% 0%;
+                    background-position: 0% 50%;
+                }
+                100% {
+                    grid-template-rows: 30% 70%;
+                    background-position: 100% 50%;
+                }
+            }
+
+            .typewriter-container {
+                width: 100%;
+            }
+
+            .try-now-button[data-stage="1"] {
+                right: 50%;
+                transform: translateX(50%);
+            }
+
+            .typewriter-text::before {
+                top: 150%;
+            }
+        }
+        
+        @media (orientation: landscape) {
+            main {
+                grid-template-columns: 100% 0%;
+            }
+
+            main[data-stage="1"] {
+                animation: body-grid-column-expansion 4s;
+                animation-fill-mode: forwards;
+            }
+
+            @keyframes body-grid-column-expansion {
+                0% {
+                    grid-template-columns: 100% 0%;
+                    background-position: 0% 50%;
+                }
+                100% {
+                    grid-template-columns: 50% 50%;
+                    background-position: 100% 50%;
+                }
+            }
+
+            .typewriter-container {
+                height: 100%;
+            }
+
+            .try-now-button[data-stage="1"] {
+                right: 10%;
+            } 
+
+            #note-container-area {
+                overflow: hidden;
+                overflow-y: scroll;
+            }
+
+            .typewriter-text::before {
+                top: 300%;
             }
         }
 
@@ -59,10 +130,10 @@ include 'helpers/notes_params.php';
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100%;
         }
 
         .typewriter-text {
+            user-select: none;
             position: relative;
             font-size: 5em;
             font-weight: 1000;
@@ -81,7 +152,6 @@ include 'helpers/notes_params.php';
             content: '';
             height: 80%;
             position: absolute;
-            top: 300%;
             left: 0%;
             right: 0%;
             background-image: radial-gradient(ellipse, rgba(0,0,0,0.3), transparent 50%);
@@ -98,30 +168,31 @@ include 'helpers/notes_params.php';
             }
         }
 
+        .try-now-button-container {
+            width: 100%;
+            position: relative;
+        }
+
         .try-now-button {
             position: absolute;
             right: 80%;
             top: 0%;
             background: black;
             color: white;
+            font-size: 1.5em;
             transition: 
                 background-color 250ms,
                 color 250ms,
                 opacity 3s ease 5s,
-                right 4s ease 4s;
+                right 2s ease 4s;
             opacity: 0;
             padding: min(1vh,1vw) min(2vh,2vw);
             border-radius: 100px;
-        }
-
-        .try-now-button-container {
-            width: 100%;
-            position: relative;
+            user-select: none;
         }
 
         .try-now-button[data-stage="1"] {
             opacity: 1;
-            right: 10%;
         } 
 
         .try-now-button:hover {
@@ -135,19 +206,19 @@ include 'helpers/notes_params.php';
             align-items: center;
             flex-direction: column;
             width: 100%;
-            overflow: hidden;
-            overflow-y: scroll;
+            /* overflow: hidden;
+            overflow-y: scroll; */
         }
         
-        #note-container-area::-webkit-scrollbar {
+        ::-webkit-scrollbar {
             width: 1vw;
         }
 
-        #note-container-area::-webkit-scrollbar-track {
+        ::-webkit-scrollbar-track {
             background: transparent;
         }
 
-        #note-container-area::-webkit-scrollbar-thumb {
+        ::-webkit-scrollbar-thumb {
             background: rgba(255,255,255,0.3);
             border: 0px solid black;
             border-radius: 1vw;
@@ -155,188 +226,50 @@ include 'helpers/notes_params.php';
             opacity: 0;
         }
         
-        #note-container-area::-webkit-scrollbar-thumb:hover {
+        ::-webkit-scrollbar-thumb:hover {
             background: rgba(255,255,255,0.5);
         }
 
         #note-container {
-            margin-top: 100vh; 
             width: 100%;
             display: flex;
             justify-content: center;
-            transition: margin-top 2s ease-out;
+            transition: height 500ms ease-out,width 1.500s ease-in;
             height: 100vh;
         }
 
         #note-container[data-stage="2"] {
-            margin-top: 0px; 
             width: auto;
         }
 
         .note {
             width: <?php echo $note_width?>px;
             transition: opacity 1s ease-in-out;
-            opacity: 0;
+            opacity: 1;
         }
 
         /* Initial Visibility */
-        .note[data-stage="2"] {
+        /* .note[data-stage="2"] {
             opacity: 1;
-        }
+        } */
 
     </style>
 </head>
 <body>
-    <div class='typewriter-container'>
-        <div class="typewriter-text">
-            Note That Down!
+    <main>
+        <div class='typewriter-container'>
+            <div class="typewriter-text">
+                Note That Down!
+            </div>
+            <div class='try-now-button-container'>
+                <div class="try-now-button" onclick="window.location.href='signup.php'">Try now</div>
+            </div>
         </div>
-        <div class='try-now-button-container'>
-            <div class="try-now-button" onclick="window.location.href='signup.php'">Try now</div>
+        <div id="note-container-area">
+            <div id="note-container">            
+            </div>
         </div>
-    </div>
-    <div id="note-container-area">
-        <!-- <div id="note-container-spacer"></div> -->
-        <div id="note-container">
-            
-            <!-- !!!!!!!!!!!!!!!!!!!! -->
-            <div class="note" id="note-1-1" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(160, 196, 255);">
-        <input type="text" placeholder="Add Title Here" value="Healthy Eating" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 250px;">
-Eating a balanced diet is crucial for maintaining good health. Incorporating a variety of fruits, vegetables, whole grains, lean proteins, and healthy fats can provide essential nutrients and support overall well-being. It's important to listen to your body and make mindful food choices that nourish you.
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-    <div class="note"  id="note-1-2" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(253, 255, 182);">
-        <input type="text" placeholder="Add Title Here" value="Importance of Sleep" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 420px;">
-Sleep is vital for physical and mental health. It allows the body to repair itself and the brain to consolidate memories.
-Adults typically need 7-9 hours of sleep each night.
-Poor sleep can lead to various health issues, including weakened immune function and increased stress levels.
-Establishing a relaxing bedtime routine and maintaining a consistent sleep schedule can greatly improve sleep quality.
-Sleep is vital for physical and mental health. It allows the body to repair itself and the brain to consolidate memories.
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-    <div class="note"  id="note-1-3" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(255, 198, 255);">
-        <input type="text" placeholder="Add Title Here" value="Tips for Studying" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 330px;">
-To maximize your study sessions, create a dedicated study space free from distractions.
-Use active learning techniques, like summarizing information in your own words or teaching it to someone else.
-Break study time into focused intervals using the Pomodoro Technique—25 minutes of studying followed by a 5-minute break.
-This approach can enhance retention and reduce burnout.
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-    <div class="note"  id="note-1-4" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(202, 255, 191);">
-        <input type="text" placeholder="Add Title Here" value="Tips for Studying" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 350px;">
-To maximize your study sessions, create a dedicated study space free from distractions.
-Use active learning techniques, like summarizing information in your own words or teaching it to someone else.
-Break study time into focused intervals using the Pomodoro Technique—25 minutes of studying followed by a 5-minute break.
-This approach can enhance retention and reduce burnout.
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-
-    <div class="note" id="note-1-5" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(160, 196, 255);">
-        <input type="text" placeholder="Add Title Here" value="Healthy Eating" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 275px;">
-Eating a balanced diet is crucial for maintaining good health. Incorporating a variety of fruits, vegetables, whole grains, lean proteins, and healthy fats can provide essential nutrients and support overall well-being. It's important to listen to your body and make mindful food choices that nourish you.
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-
-    <!-- end of column 1 -->
-
-            <div class="note"  id="note-2-1" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(255, 198, 255);">
-        <input type="text" placeholder="Add Title Here" value="Title Here" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 540px;">
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde iste officia harum blanditiis totam pariatur ut deserunt modi asperiores necessitatibus illo hic minus aliquam rerum laboriosam sit repellat, accusantium ad.
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa repellat voluptates quasi dicta adipisci rem, sint error dolores iure, id odit, repudiandae sapiente perspiciatis saepe exercitationem consectetur laborum doloribus non!
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. At doloribus voluptas voluptatum quis pariatur consectetur ullam, reprehenderit voluptate architecto! Autem eligendi laboriosam dicta ipsam laborum neque officia! Debitis, voluptatem accusantium.
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-    <div class="note"  id="note-2-2" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(255, 214, 165);">
-        <input type="text" placeholder="Add Title Here" value="Title Here" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 355px;">
-Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatibus eaque possimus architecto fuga quidem magni a facilis doloremque,
-dolores aspernatur delectus eligendi! Voluptatibus illum veniam natus animi maiores saepe aspernatur?
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, impedit culpa. Nemo optio nulla non incidunt ad obcaecati, quibusdam reiciendis
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-    <div class="note"  id="note-2-3" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(255, 198, 255);">
-        <input type="text" placeholder="Add Title Here" value="Title Here" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 210px;">
-Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore expedita laboriosam ad velit quis! Illo autem nam totam tenetur!
-
-Quas laudantium aperiam provident ullam reiciendis nisi cumque labore modi debitis.
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-
-    <div class="note"  id="note-2-4" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(160, 196, 255);">
-        <input type="text" placeholder="Add Title Here" value="Title Here" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 315px;">
-Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore expedita laboriosam ad velit quis! Illo autem nam totam tenetur!
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit laborum aliquid id quam atque omnis, expedita sunt suscipit soluta accusantium dolorum, natus incidunt voluptatibus perspiciatis eos iste voluptas provident ipsum.
-Quas laudantium aperiam provident ullam reiciendis nisi cumque labore modi debitis.
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-    <div class="note"  id="note-2-5" data-note-type="text" data-note-unsaved-changes="0" style="background-color: rgb(255, 214, 165);">
-        <input type="text" placeholder="Add Title Here" value="Title Here" class="note-title" disabled="">
-        <textarea type="text" class="note-body" placeholder="Your note here" disabled="" style="height: 355px;">
-Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatibus eaque possimus architecto fuga quidem magni a facilis doloremque,
-dolores aspernatur delectus eligendi! Voluptatibus illum veniam natus animi maiores saepe aspernatur?
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, impedit culpa. Nemo optio nulla non incidunt ad obcaecati, quibusdam reiciendis
-        </textarea>
-        <div class="note-toolbar">
-            <div class="note-edit-button"></div>
-        </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-            <!-- !!!!!!!!!!!!!!!!!!!! -->
-        </div>
-    </div>
+    </main>
 </body>
 <script src="js/isotope.pkgd.min.js"></script>
 <script src="public/note.js"></script>
@@ -345,34 +278,25 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, impedit 
     const noteColors = <?php echo json_encode($note_colors); ?>;
     const noteSize = <?php echo $note_width?> + 20 + 5;
     var initialTextAnimationComplete = false;
-    var dataText = [ "..."];
-    // var dataText = [ "Simple.", "Quick.", "Organized." , "Presenting" , "...", "Note That Down!"];
+    var dataText = [ "Simple.", "Quick.", "Organized." , "Presenting" , "...", "Note That Down!"];
 
     var iso = new Isotope( '#note-container', {
-        transitionDuration: '0.4s',
+        transitionDuration: '1s',
     });
 
     function triggerAnimationStage2() {
         document.querySelector('#note-container').dataset.stage = "2";
-        setTimeout(() => { document.querySelector('#note-1-1').dataset.stage = "2"; }, 000  + Math.random()*1000);
-        setTimeout(() => { document.querySelector('#note-1-2').dataset.stage = "2"; }, 900  + Math.random()*1000);
-        setTimeout(() => { document.querySelector('#note-1-3').dataset.stage = "2"; }, 000  + Math.random()*1000);
-        setTimeout(() => { document.querySelector('#note-1-4').dataset.stage = "2"; }, 600  + Math.random()*1000);
-        setTimeout(() => { document.querySelector('#note-1-5').dataset.stage = "2"; }, 900  + Math.random()*1000);
-        setTimeout(() => { document.querySelector('#note-2-1').dataset.stage = "2"; }, 000  + Math.random()*1000);
-        setTimeout(() => { document.querySelector('#note-2-2').dataset.stage = "2"; }, 300  + Math.random()*1000);
-        setTimeout(() => { document.querySelector('#note-2-3').dataset.stage = "2"; }, 600  + Math.random()*1000);
-        setTimeout(() => { document.querySelector('#note-2-4').dataset.stage = "2"; }, 300  + Math.random()*1000);
-        setTimeout(() => { document.querySelector('#note-2-5').dataset.stage = "2"; }, 600  + Math.random()*1000);
-        resizeNoteContainer(); 
-        iso.arrange();
+        resizeNoteContainerHelper(
+            noteSize,
+            noteSize+2,'#note-container');
+        getDemoNotes();
     }
 
     function triggerAnimation() {
         document.querySelector('.try-now-button-container').dataset.stage = "1";
         document.querySelector('.try-now-button').dataset.stage = "1";
         document.querySelector('.typewriter-text').dataset.stage = "1";
-        document.body.dataset.stage = "1";
+        document.querySelector('main').dataset.stage = "1";
         setTimeout(()=>{triggerAnimationStage2()}, 3500);
     }
 
@@ -407,27 +331,73 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, impedit 
         
     }
 
-    function AddNotesToDocument(notesXML) {
+    async function AddNotesToDocument(notesXML) {
         const users = notesXML.querySelectorAll('note');
+        var titleDelay = 250;
+        var bodyDelay = 50;
         for (let i = 0; i < users.length; i++) {
+            await delay(500+Math.random()*1500);
             const user = users[i];
             
-            const note = getNoteElementFromXML(user);
+            // const note = getNoteElementFromXML(user);
+            const note = getEmptyNoteElement(noteColors,noteColors[i%noteColors.length]);
+            initializeNote(note);
             // Add note to container
             
             document.querySelector('#note-container').append(note);
             note.dataset.stage = "2";
             iso.appended(note);
-            initializeNote(note);
             isotopeUpdate();
+            
+            title = user.querySelector('title').innerHTML;
+            for (let titleChar = 0; titleChar < title.length; titleChar++) {
+                await delay(Math.random()*titleDelay);
+                const char = title[titleChar];
+                note.querySelector('.note-title').value += char;
+            }
+            body = user.querySelector('body').innerHTML;
+            if (bodyDelay != 0) {
+                for (let bodyChar = 0; bodyChar < body.length; bodyChar++) {
+                    await delay(Math.random()*50);
+                    const char = body[bodyChar];
+                    bodyElement = note.querySelector('.note-body');
+                    bodyElement.value += char;
+                    expandTextArea(bodyElement);
+                    if (((body.length > 16) && ((bodyChar + 16) == body.length)) || ((body.length < 16) && (bodyChar == 0))) resizeNoteContainer();
+                }
+
+            } else if (i < 3) {
+                let bodyChar = 0;
+                for (;bodyChar < body.length; bodyChar+=5) {
+                    await delay(Math.random()*50);
+                    bodyElement = note.querySelector('.note-body');
+                    bodyElement.value += body.substring(bodyChar,bodyChar+5);
+                    expandTextArea(bodyElement);
+                }
+                bodyElement = note.querySelector('.note-body');
+                bodyElement.value += body.substring(bodyChar,body.length);
+                expandTextArea(bodyElement);
+            } else {
+                bodyElement = note.querySelector('.note-body');
+                bodyElement.value = body;
+                expandTextArea(bodyElement);
+            }
+            titleDelay = 50;
+            bodyDelay = 0;
         }
+    }
+
+    // Removes the note from page
+    function deleteNote(noteDiv) {
+        iso.remove(noteDiv);
+        isotopeUpdate();
     }
 
     // Populate single note using data attributes
     function initializeNote(noteDiv) {
         initializeNoteHelper(
             noteDiv,
-            ()=>{  },
+            ()=>{deleteNote(noteDiv)},
             noteColors,
             ()=>{  })
     }
@@ -438,12 +408,13 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, impedit 
 
     // Resizes the note container to fit exactly inside the viewport
     function resizeNoteContainer() {
-        resizeNoteContainerHelper(noteSize,document.documentElement.clientWidth/2,'#note-container');
+        resizeNoteContainerHelper(
+            noteSize,
+            document.querySelector('#note-container-area').clientWidth,'#note-container');
     }
 
     document.addEventListener('DOMContentLoaded',function(event){
         StartTextAnimation(0);
-        getDemoNotes();
     });
 
     window.addEventListener('resize', ()=>{

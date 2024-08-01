@@ -1,19 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <response>
-    <note>
-        <title>This is the first Note</title>
-        <body>This is the body for first note</body>
-        <color>555555</color>
-        <id></id>
-        <timeUpdated></timeUpdated>
-        <timeCreated></timeCreated>
-    </note>
-    <note>
-        <title>This is the second Note</title>
-        <body>This is the body for second note</body>
-        <color>665555</color>
-        <id></id>
-        <timeUpdated></timeUpdated>
-        <timeCreated></timeCreated>
-    </note>
+<note>
+    <title>Grocery List</title>
+    <body>1. Milk
+2. Eggs
+3. Bread
+4. Apples
+5. Chicken
+6. Spinach
+7. Cheese
+8. Rice
+9. Pasta
+10. Olive Oil
+11. Coffee
+12. Oats
+13. Cereal
+14. Yogurt
+15. Carrots
+16. Onions
+17. Garlic
+18. Tomatoes
+19. Potatoes
+20. Bananas</body>
+    <color>f0e68c</color>
+    <id>1</id>
+    <timeUpdated>2024-08-01T10:00:00Z</timeUpdated>
+    <timeCreated>2024-08-01T09:00:00Z</timeCreated>
+</note>
+<note>
+    <title>Math Assignment</title>
+    <body>Complete exercises 1-20 from chapter 5 and submit by Friday. Ensure to show all work for full credit. Remember to review the formulae related to quadratic equations and practice similar problems from the textbook.</body>
+    <color>add8e6</color>
+    <id>2</id>
+    <timeUpdated>2024-08-01T10:30:00Z</timeUpdated>
+    <timeCreated>2024-08-01T09:30:00Z</timeCreated>
+</note>
+<note>
+    <title>Meeting Notes</title>
+    <body>Discuss project timeline and budget with the team. Action items: Send budget estimates to the finance department by next week. Schedule a follow-up meeting with stakeholders to review project milestones and ensure everyone is on the same page regarding deliverables and expectations.</body>
+    <color>ffb6c1</color>
+    <id>3</id>
+    <timeUpdated>2024-08-01T11:00:00Z</timeUpdated>
+    <timeCreated>2024-08-01T10:00:00Z</timeCreated>
+</note>
+<note>
+    <title>Book Recommendations</title>
+    <body>1. "The Alchemist" by Paulo Coelho 2. "1984" by George Orwell 3. "To Kill a Mockingbird" by Harper Lee 4. "The Great Gatsby" by F. Scott Fitzgerald 5. "Pride and Prejudice" by Jane Austen. These books span a variety of genres and themes, including adventure, dystopian society, moral lessons, and social issues. I highly recommend reading them for a mix of entertainment and thought-provoking insights.</body>
+    <color>98fb98</color>
+    <id>4</id>
+    <timeUpdated>2024-08-01T11:30:00Z</timeUpdated>
+    <timeCreated>2024-08-01T10:30:00Z</timeCreated>
+</note>
+<note>
+    <title>Vacation Planning</title>
+    <body>1. Book flights to Italy 2. Reserve hotel in Rome 3. Create an itinerary for sightseeing including the Colosseum, Vatican City, and the Pantheon. Remember to look for local restaurants for authentic Italian cuisine, and consider day trips to Florence and Venice. Research transportation options within the city, such as public transport or rental bikes.</body>
+    <color>ffe4b5</color>
+    <id>5</id>
+    <timeUpdated>2024-08-01T12:00:00Z</timeUpdated>
+    <timeCreated>2024-08-01T11:00:00Z</timeCreated>
+</note>
+<note>
+    <title>Workout Routine</title>
+    <body>1. Monday: Upper body strength - focus on chest, shoulders, and triceps. 2. Wednesday: Cardio - running for 30 minutes followed by HIIT exercises. 3. Friday: Lower body strength - work on quads, hamstrings, calves, and glutes. Don't forget to include stretching sessions on off days for flexibility and recovery.</body>
+    <color>ffb6c1</color>
+    <id>6</id>
+    <timeUpdated>2024-08-01T12:30:00Z</timeUpdated>
+    <timeCreated>2024-08-01T11:30:00Z</timeCreated>
+</note>
+<note>
+    <title>Project Deadlines</title>
+    <body>1. Marketing campaign - due August 15. Ensure all materials are prepared and finalized by August 10 to allow for any last-minute changes. 2. Website redesign - due August 30. All team members should review their respective sections by August 20 to guarantee timely feedback and revisions. Regular check-ins are necessary to stay on track and maintain communication throughout the process.</body>
+    <color>add8e6</color>
+    <id>7</id>
+    <timeUpdated>2024-08-01T13:00:00Z</timeUpdated>
+    <timeCreated>2024-08-01T12:00:00Z</timeCreated>
+</note>
+<note>
+    <title>Cooking Recipes</title>
+    <body>1. Spaghetti Carbonara - ingredients include spaghetti, eggs, pancetta, pecorino cheese, and black pepper. Cook spaghetti, sauté pancetta, mix eggs with cheese, combine, and enjoy. 2. Chicken Tikka Masala - marinate chicken in yogurt and spices, cook with onions and tomatoes, serve with basmati rice. 3. Vegetable Stir Fry - use seasonal vegetables, stir fry with garlic and soy sauce, serve over rice or noodles. Perfect for quick weeknight dinners!</body>
+    <color>ffdab9</color>
+    <id>8</id>
+    <timeUpdated>2024-08-01T13:30:00Z</timeUpdated>
+    <timeCreated>2024-08-01T12:30:00Z</timeCreated>
+</note>
+<note>
+    <title>Personal Goals</title>
+    <body>1. Read 12 books this year. To achieve this, I will read at least one book per month. 2. Meditate for 10 minutes daily to improve mental clarity and reduce stress. I can use a meditation app to guide my practice. 3. Save $5000 by year-end by budgeting monthly and cutting unnecessary expenses. Regularly review my finances to ensure I stay on track towards achieving this goal.</body>
+    <color>f0e68c</color>
+    <id>9</id>
+    <timeUpdated>2024-08-01T14:00:00Z</timeUpdated>
+    <timeCreated>2024-08-01T13:00:00Z</timeCreated>
+</note>
+<note>
+    <title>Weekly To-Do List</title>
+    <body>- Clean the house: vacuum, dust, and organize. - Finish the report for work by Tuesday. - Call mom to check in and plan a visit. - Plan weekend activities, considering going hiking or having a movie night. - Prepare meals in advance to save time during the week. - Grocery shopping on Sunday to restock supplies. - Spend quality time with family and friends.</body>
+    <color>98fb98</color>
+    <id>10</id>
+    <timeUpdated>2024-08-01T14:30:00Z</timeUpdated>
+    <timeCreated>2024-08-01T13:30:00Z</timeCreated>
+</note>
+
 </response>
