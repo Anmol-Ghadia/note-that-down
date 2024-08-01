@@ -43,15 +43,13 @@ include 'helpers/notes_params.php';
             height: 100%;
             padding: 0px;
             margin: 0px;
-            /* width: 100vw;
-            height: 100vh; */
             display: grid;
-            /* padding: min(2vh,2vw); */
         }
 
         @media (orientation: portrait) {
             main {
                 grid-template-rows: 100% 0%;
+                grid-template-columns: auto;
                 overflow-x: hidden;
                 overflow-y: scroll;
             }
@@ -76,9 +74,8 @@ include 'helpers/notes_params.php';
                 width: 100%;
             }
 
-            .try-now-button[data-stage="1"] {
-                right: 50%;
-                transform: translateX(50%);
+            .typewriter-text {
+                font-size: 8vw
             }
 
             .typewriter-text::before {
@@ -89,6 +86,7 @@ include 'helpers/notes_params.php';
         @media (orientation: landscape) {
             main {
                 grid-template-columns: 100% 0%;
+                grid-template-rows: auto;
             }
 
             main[data-stage="1"] {
@@ -111,13 +109,13 @@ include 'helpers/notes_params.php';
                 height: 100%;
             }
 
-            .try-now-button[data-stage="1"] {
-                right: 10%;
-            } 
-
             #note-container-area {
                 overflow: hidden;
                 overflow-y: scroll;
+            }
+
+            .typewriter-text {
+                font-size: 6vw
             }
 
             .typewriter-text::before {
@@ -135,13 +133,12 @@ include 'helpers/notes_params.php';
         .typewriter-text {
             user-select: none;
             position: relative;
-            font-size: 5em;
             font-weight: 1000;
             color: white;
             text-transform: uppercase;
             font-family: Georgia, 'tradegothiclt-bold', sans-serif;
             transition: color 4s;
-            text-align: right;
+            text-align: center;
         }
 
         .typewriter-text[data-stage="1"] {
@@ -175,16 +172,17 @@ include 'helpers/notes_params.php';
 
         .try-now-button {
             position: absolute;
-            right: 80%;
+            left: 0%;
             top: 0%;
             background: black;
             color: white;
-            font-size: 1.5em;
+            font-size: 1.25em;
             transition: 
                 background-color 250ms,
                 color 250ms,
                 opacity 3s ease 5s,
-                right 2s ease 4s;
+                transform 2s ease 4s,
+                left 2s ease 4s;
             opacity: 0;
             padding: min(1vh,1vw) min(2vh,2vw);
             border-radius: 100px;
@@ -195,8 +193,10 @@ include 'helpers/notes_params.php';
         }
 
         .try-now-button[data-stage="1"] {
+            left: 50%;
+            transform: translateX(-50%);
             opacity: 1;
-        } 
+        }
 
         .try-now-button:hover {
             background: #6EACDA;
@@ -401,7 +401,7 @@ include 'helpers/notes_params.php';
                     if (((body.length > 16) && ((bodyChar + 16) == body.length)) || ((body.length < 16) && (bodyChar == 0))) resizeNoteContainer();
                 }
 
-            } else if (i < 3) {
+            } else if (i < 2) {
                 let bodyChar = 0;
                 for (;bodyChar < body.length; bodyChar+=5) {
                     await delay(Math.random()*50);
@@ -446,6 +446,7 @@ include 'helpers/notes_params.php';
         resizeNoteContainerHelper(
             noteSize,
             document.querySelector('#note-container-area').clientWidth,'#note-container');
+        isotopeUpdate();
     }
 
     document.addEventListener('DOMContentLoaded',function(event){
@@ -455,6 +456,11 @@ include 'helpers/notes_params.php';
     window.addEventListener('resize', ()=>{
         resizeNoteContainer();
     });
+
+    setInterval(() => {
+            resizeNoteContainer();
+            isotopeUpdate();
+        }, 1000);
 
     // type one text in the typwriter
     // keeps calling itself until the text is finished
@@ -480,7 +486,7 @@ include 'helpers/notes_params.php';
             }
             setTimeout(function() {
                 StartTextAnimation(0);
-            }, 15000);
+            }, 30000);
         }
         if (i < dataText.length) {
             typeWriter(dataText[i], 0, function(){
