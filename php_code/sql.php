@@ -1,7 +1,7 @@
 <?php
 $servername = "db";
-$server_username = "root";
-$server_password = "mariadb";
+$server_username = "user";
+$server_password = "password";
 $server_database = "notes";
 
 try {

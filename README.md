@@ -17,6 +17,12 @@ mariadb -u root -p<password>
 ```
 
 ```SQL
+CREATE USER 'backend'@'%' IDENTIFIED BY "mariadb";
+GRANT ALL PRIVILEGES ON 'notedb'.* TO 'backend'@'%';
+FLUSH PRIVILEGES;
+```
+
+```SQL
 CREATE TABLE users (
     username VARCHAR(20) PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -47,4 +53,10 @@ CREATE TABLE notes (
     CHECK (LENGTH(color) = 6 AND color REGEXP '^[0-9A-Fa-f]{6}$'),
     FOREIGN KEY (username) REFERENCES users(username)
 );
+```
+
+
+optional
+```SQL
+SHOW GRANTS FOR 'user1'@localhost;
 ```
