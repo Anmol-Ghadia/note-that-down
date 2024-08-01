@@ -189,6 +189,9 @@ include 'helpers/notes_params.php';
             padding: min(1vh,1vw) min(2vh,2vw);
             border-radius: 100px;
             user-select: none;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
         }
 
         .try-now-button[data-stage="1"] {
@@ -200,14 +203,48 @@ include 'helpers/notes_params.php';
             color: black;
         }
 
+        .try-now-button:hover .try-now-arrow-image {
+            animation: none;
+            margin-left: 1.5vw;
+            margin-right: 0vw;
+        }
+
+        .try-now-arrow-image {
+            margin-left: 0.5vw;
+            margin-right: 1vw;
+            height: 1em;
+            aspect-ratio: 1;
+            background-image: url('public/arrow-right-long-solid.svg');
+            background-size: 100% 100%;
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            animation: try-now-image-animation 3s cubic-bezier(0.68,-0.55,0.265,1.55) ;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            transition: margin 150ms;
+        }
+
+        @keyframes try-now-image-animation {
+            0% {
+                margin-left: 0.5vw;
+                margin-right: 1vw;
+            }
+            90% {
+                margin-left: 0.5vw;
+                margin-right: 1vw;
+            }
+            100% {
+                margin-left: 1.5vw;
+                margin-right: 0vw;
+            }
+        }
+
         #note-container-area {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             width: 100%;
-            /* overflow: hidden;
-            overflow-y: scroll; */
         }
         
         ::-webkit-scrollbar {
@@ -248,11 +285,6 @@ include 'helpers/notes_params.php';
             opacity: 1;
         }
 
-        /* Initial Visibility */
-        /* .note[data-stage="2"] {
-            opacity: 1;
-        } */
-
     </style>
 </head>
 <body>
@@ -262,7 +294,10 @@ include 'helpers/notes_params.php';
                 Note That Down!
             </div>
             <div class='try-now-button-container'>
-                <div class="try-now-button" onclick="window.location.href='signup.php'">Try now</div>
+                <div class="try-now-button" onclick="window.location.href='signup.php'">
+                    Try now
+                    <div class="try-now-arrow-image"></div>
+                </div>
             </div>
         </div>
         <div id="note-container-area">
