@@ -9,11 +9,13 @@ include 'helpers/notes_params.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My PHP Project</title>
-    <link rel="stylesheet" href="public/note.css">
+    <script src="public/js/isotope.pkgd.min.js"></script>
+    <script src="public/js/note.js"></script>
+    <link rel="stylesheet" href="public/styles/note.css">
     <style>
         @font-face {
             font-family: 'Handlee';
-            src: url('public/Handlee-Regular.ttf') format('truetype');
+            src: url('public/fonts/Handlee-Regular.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -214,7 +216,7 @@ include 'helpers/notes_params.php';
             margin-right: 1vw;
             height: 1em;
             aspect-ratio: 1;
-            background-image: url('public/arrow-right-long-solid.svg');
+            background-image: url('public/images/arrow-right-long-solid.svg');
             background-size: 100% 100%;
             background-position: 50% 50%;
             background-repeat: no-repeat;
@@ -306,8 +308,6 @@ include 'helpers/notes_params.php';
         </div>
     </main>
 </body>
-<script src="js/isotope.pkgd.min.js"></script>
-<script src="public/note.js"></script>
 <script>
 
     const noteColors = <?php echo json_encode($note_colors); ?>;

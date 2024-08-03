@@ -144,7 +144,7 @@ input:disabled {
     height: 100%;
     aspect-ratio: 1;
     overflow: hidden;
-    background-image: url('trash-can-solid.svg');
+    background-image: url('/public/images/trash-can-solid.svg');
     background-size: 60% 60%;
     background-position: center;
     background-repeat: no-repeat;
@@ -184,14 +184,14 @@ input:disabled {
 }
 
 .note[data-note-unsaved-changes="1"] .note-edit-button {
-    background-image: url('floppy-disk-regular.svg');
+    background-image: url('/public/images/floppy-disk-regular.svg');
     background-size: 70% 70%;
 }
 
 .note-edit-button {
     height: 100%;
     aspect-ratio: 1;
-    background-image: url('pen-to-square-solid.svg');
+    background-image: url('/public/images/pen-to-square-solid.svg');
     background-size: 65% 65%;
     background-position: center;
     background-repeat: no-repeat;

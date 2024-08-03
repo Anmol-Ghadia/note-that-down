@@ -50,15 +50,16 @@ foreach ($rows as $row) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My PHP Project</title>
-    <script src="js/isotope.pkgd.min.js"></script>
-    <link rel="stylesheet" href="public/note.css">
+    <script src="public/js/isotope.pkgd.min.js"></script>
+    <script src="public/js/note.js"></script>
+    <link rel="stylesheet" href="public/styles/note.css">
     <style>
         * { box-sizing: border-box; margin: 0px; padding: 0px;}
         h1 { color: #333; }
 
         @font-face {
             font-family: 'Handlee';
-            src: url('public/Handlee-Regular.ttf') format('truetype');
+            src: url('public/fonts/Handlee-Regular.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -105,11 +106,11 @@ foreach ($rows as $row) {
             width: 5vh;
             height: 5vh;
             z-index: 75;
-            background-image: url('public/square-plus-solid.svg');
+            background-image: url('public/images/square-plus-solid.svg');
         }
 
         #logout-button {
-            background-image: url('public/right-from-bracket-solid.svg');
+            background-image: url('public/images/right-from-bracket-solid.svg');
         }
 
         .control-button {
@@ -266,7 +267,6 @@ foreach ($rows as $row) {
     <div id='footer'></div>
     </main>
 </body>
-<script src="public/note.js"></script>
 <script>
     const noteColors = <?php echo json_encode($note_colors); ?>;
     // (width + padding + 5px for extra space)

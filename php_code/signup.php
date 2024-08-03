@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         @font-face {
             font-family: 'Handlee';
-            src: url('public/Handlee-Regular.ttf') format('truetype');
+            src: url('public/fonts/Handlee-Regular.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             left: 0%;
             margin: 1vh;
             background-color: transparent;
-            background-image: url('public/arrow-left-solid.svg');
+            background-image: url('public/images/arrow-left-solid.svg');
             background-repeat: no-repeat;
             background-position: center;
             background-size: 100% 100%;
