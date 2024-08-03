@@ -1,9 +1,12 @@
 <?php
 
+include '../helpers/api_helpers.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     session_start();
     session_unset();
     session_destroy();
-    header("Location: notes.php");
+    http_response_code(200);
+    sendResponse('Logout Successful');
 }
 ?>

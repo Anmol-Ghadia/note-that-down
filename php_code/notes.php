@@ -217,9 +217,7 @@ foreach ($rows as $row) {
     <div id='header'>
         <div></div>
         <p>Your Noteboard</p>
-        <form action="logout.php" method="post">
-            <button id="logout-button" class='control-button' type="submit"></button>
-        </form>
+        <button id="logout-button" class='control-button' onclick="handleExit()"></button>
     </div>
     <button id='start-new-note-button' class='control-button' onclick="startNewNote()"></button>
     
@@ -283,6 +281,26 @@ foreach ($rows as $row) {
     // Resizes the note container to fit exactly inside the viewport
     function resizeNoteContainer() {
         resizeNoteContainerHelper(noteSize,document.documentElement.clientWidth,'#note-container');
+    }
+
+    // Asks the server to end session
+    function handleExit() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/logout.php', true);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                window.location.href = '/';
+            } else {
+                console.error('POST Request Failed:', xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error('Network Error');
+        };
+
+        xhr.send();
     }
 
     // Sets the color for new note
