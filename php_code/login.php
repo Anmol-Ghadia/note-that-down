@@ -7,7 +7,8 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     header("Location: notes.php");
 }
 
-$error = $result = '';
+$error = '';
+$result = '0';
 $success = true;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,12 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($success) {
         $match = checkUser($username, $password);
         if ($match) {
-            $result = "Logged in!";
             $_SESSION['username'] = $username;
             $_SESSION['logged_in'] = true;
-            header("Location: notes.php");
+            $result = '1';
         } else {
-            $result = "Log in failed :(";
+            $error = "Log in failed :(";
         }
     }
 }
@@ -62,13 +62,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class='notification-container'>
                 <div class='error'><?php echo $error ?></div>
-                <div class="error"><?php echo $result ?></div>
             </div>
             <button type="submit">Log in</button>
         </form>
         <div class='sign-up-container'><i>Don't have account?</i> <a href="signup.php"> sign up</a></div>
         <a href="index.php" class='home-page-button'></a>
     </div>
+    <div id="banner-background">
+        <div id="banner">
+            <h3>Log in succesfully!</h3>
+            <div class="sign-up-container"><i>Redirecting. If not redirected in few seconds, click here:</i><a href="notes.php">Noteboard</a></div>
+        </div>
+    </div>
 </body>
-
+<script>
+    const result = <?php echo $result ?>;
+    if (result == '1') {
+        document.querySelector('#banner-background').dataset.show = result;
+        setTimeout(()=>{
+            window.location.href = "/notes.php";
+        },2500)
+    }
+</script>
 </html>

@@ -7,7 +7,8 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     header("Location: notes.php");
 }
 
-$error = $result = '';
+$error = '';
+$result = '0';
 $success = true;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $created = createUser($username, $hash, $email);
         if ($created) {
-            $result = "sign up success!";
+            $result = "1";
         } else {
-            $result = "sign up failed :(";
+            $error = "sign up failed :(";
         }
     }
 }
@@ -72,13 +73,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </label>
             <div class='notification-container'>
                 <div class="error"><?php echo $error ?></div>
-                <div class="error"><?php echo $result ?></div>
             </div>
             <button type="submit">Sign up!</button>
         </form>
         <div class="login-container"><i>Already have an account?</i><a href="login.php">Login</a></div>
         <a href="index.php" class='home-page-button'></a>
     </div>
+    <div id="banner-background">
+        <div id="banner">
+            <h3>Signed up succesfully!</h3>
+            <div class="login-container"><i>Continue here:</i><a href="login.php">Login</a></div>
+        </div>
+    </div>
 </body>
-
+<script>
+    const result = <?php echo $result ?>;
+    if (result == '1') {
+        document.querySelector('#banner-background').dataset.show = result;
+        setTimeout(()=>{
+            window.location.href = "/notes.php";
+        },2500)
+    }
+</script>
 </html>
