@@ -392,6 +392,7 @@ include 'helpers/notes_params.php';
             }
             body = user.querySelector('body').innerHTML;
             if (bodyDelay != 0) {
+                // First Note
                 for (let bodyChar = 0; bodyChar < body.length; bodyChar++) {
                     await delay(Math.random()*50);
                     const char = body[bodyChar];
@@ -400,8 +401,13 @@ include 'helpers/notes_params.php';
                     expandTextArea(bodyElement);
                     if (((body.length > 16) && ((bodyChar + 16) == body.length)) || ((body.length < 16) && (bodyChar == 0))) resizeNoteContainer();
                 }
+                setInterval(() => {
+                    resizeNoteContainer();
+                    isotopeUpdate();
+                }, 1000);
 
             } else if (i < 2) {
+                // Second note
                 let bodyChar = 0;
                 for (;bodyChar < body.length; bodyChar+=5) {
                     await delay(Math.random()*50);
@@ -456,11 +462,6 @@ include 'helpers/notes_params.php';
     window.addEventListener('resize', ()=>{
         resizeNoteContainer();
     });
-
-    setInterval(() => {
-            resizeNoteContainer();
-            isotopeUpdate();
-        }, 1000);
 
     // type one text in the typwriter
     // keeps calling itself until the text is finished
