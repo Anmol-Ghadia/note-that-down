@@ -201,6 +201,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-size: 90% 90%;
         }
 
+        .error {
+            color: #660d05;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
     </style>
 </head>
 <body>
@@ -220,8 +232,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </label>
             </div>
             <div class='notification-container'>
-                <div><?php echo $error ?></div>
-                <div><?php echo $result ?></div>
+                <div class='error'><?php echo $error ?></div>
+                <div class="error"><?php echo $result ?></div>
             </div>
             <button type="submit">Log in</button>
         </form>
