@@ -2,11 +2,11 @@
 // noteSize (Number): the width of a note including padding and everything
 // maxWidth (Number): the Maximum width available for the note container
 // noteContainerSelector (string): valid selector for the container with notes
-function resizeNoteContainerHelper(noteSize, maxWidth,noteContainerSelector) {
+function resizeNoteContainerHelper(noteSize, maxWidth, noteContainerSelector) {
     const div = document.querySelector(noteContainerSelector);
-    
+
     // Max number of columns that can fit in given size
-    const columns =  Math.floor(maxWidth / noteSize);
+    const columns = Math.floor(maxWidth / noteSize);
 
     // Set width of container
     var width = columns * noteSize;
@@ -24,21 +24,21 @@ function getNoteElementFromXML(xmlDoc) {
     note.dataset.noteTimeUpdated = xmlDoc.querySelector('timeUpdated').innerHTML;
     note.dataset.noteTimeCreated = xmlDoc.querySelector('timeCreated').innerHTML;
     note.dataset.noteUnsavedChanges = "0";
-    
+
     const titleElement = document.createElement('input');
     titleElement.type = "text";
     titleElement.placeholder = "Add Title Here";
     titleElement.classList.add('note-title');
     titleElement.disabled = true;
     note.appendChild(titleElement);
-    
+
     const bodyElement = document.createElement('textarea');
     bodyElement.type = "text";
     bodyElement.placeholder = "Your note Here";
     bodyElement.classList.add('note-body');
     bodyElement.disabled = true;
     note.appendChild(bodyElement);
-    
+
     const noteEditContainer = document.createElement('div');
     noteEditContainer.classList.add('note-edit-container');
 
@@ -48,11 +48,11 @@ function getNoteElementFromXML(xmlDoc) {
 
     for (let i = 0; i < noteColors.length; i++) {
         const colorBall = noteColors[i];
-        
+
         const noteColorBall = document.createElement('div');
         noteColorBall.classList.add('note-color-ball');
         noteEditContainer.appendChild(noteColorBall);
-        
+
     }
 
     const noteToolbar = document.createElement('div');
@@ -64,37 +64,37 @@ function getNoteElementFromXML(xmlDoc) {
     noteToolbar.appendChild(noteEditButton);
 
     note.appendChild(noteToolbar);
-    
+
     return note;
 }
 
 // Parse a new single note element with no intial values
-function getEmptyNoteElement(noteColors,currentNoteColor) {
+function getEmptyNoteElement(noteColors, currentNoteColor) {
     const note = document.createElement('div');
     note.classList.add('note');
     note.dataset.noteId = '0'
-    note.dataset.noteColor = `${noteColors[Math.floor(Math.random()*(noteColors.length-1))]}`;
+    note.dataset.noteColor = `${noteColors[Math.floor(Math.random() * (noteColors.length - 1))]}`;
     // note.dataset.noteColor = `${currentNoteColor}`;
     note.dataset.noteTitle = '';
     note.dataset.noteBody = '';
     note.dataset.noteTimeUpdated = '';
     note.dataset.noteTimeCreated = '';
     note.dataset.noteUnsavedChanges = '0';
-    
+
     const titleElement = document.createElement('input');
     titleElement.type = "text";
     titleElement.placeholder = "Add Title Here";
     titleElement.classList.add('note-title');
     titleElement.disabled = true;
     note.appendChild(titleElement);
-    
+
     const bodyElement = document.createElement('textarea');
     bodyElement.type = "text";
     bodyElement.placeholder = "Your note Here";
     bodyElement.classList.add('note-body');
     bodyElement.disabled = true;
     note.appendChild(bodyElement);
-    
+
     const noteEditContainer = document.createElement('div');
     noteEditContainer.classList.add('note-edit-container');
 
@@ -104,11 +104,11 @@ function getEmptyNoteElement(noteColors,currentNoteColor) {
 
     for (let i = 0; i < noteColors.length; i++) {
         const colorBall = noteColors[i];
-        
+
         const noteColorBall = document.createElement('div');
         noteColorBall.classList.add('note-color-ball');
         noteEditContainer.appendChild(noteColorBall);
-        
+
     }
 
     const noteToolbar = document.createElement('div');
@@ -120,7 +120,7 @@ function getEmptyNoteElement(noteColors,currentNoteColor) {
     noteToolbar.appendChild(noteEditButton);
 
     note.appendChild(noteToolbar);
-    
+
     return note;
 }
 
@@ -129,38 +129,38 @@ function getEmptyNoteElement(noteColors,currentNoteColor) {
 // deleteHandler (function): function that handles delete operation (Delete is handled externally)
 // noteColors (Array): Array of strings representing color options (Hash symbol# is not part of string)
 // saveHandler (function(HTMLElement)): function that is called upon save with the note Element
-function initializeNoteHelper(noteDiv,deleteHandler,noteColors, saveHandler) {
+function initializeNoteHelper(noteDiv, deleteHandler, noteColors, saveHandler) {
 
     var noteColor = noteDiv.dataset.noteColor;
     noteDiv.style.backgroundColor = `#${noteColor}`;
-    
+
     var noteTitle = noteDiv.dataset.noteTitle;
     const noteTitleElement = noteDiv.querySelector('.note-title');
     noteTitleElement.value = noteTitle;
-    
+
     var noteBody = noteDiv.dataset.noteBody;
     const noteBodyElement = noteDiv.querySelector('.note-body');
     noteBodyElement.value = noteBody;
     expandTextArea(noteBodyElement);
-    noteBodyElement.addEventListener('input',()=>{ expandTextArea(noteBodyElement) });
-    
+    noteBodyElement.addEventListener('input', () => { expandTextArea(noteBodyElement) });
+
     const noteDeleteElement = noteDiv.querySelector('.note-delete-button');
-    noteDeleteElement.addEventListener('click',deleteHandler);
+    noteDeleteElement.addEventListener('click', deleteHandler);
 
     const colorDivs = noteDiv.querySelectorAll('.note-color-ball');
     for (let i = 0; i < colorDivs.length; i++) {
         const colorDiv = colorDivs[i];
-        
+
         if (noteColors[i] == noteColor) {
             colorDiv.dataset.colorChecked = "1";
         }
 
         colorDiv.style.background = `#${noteColors[i]}`;
-        colorDiv.addEventListener('click', ()=>{onClickHandleColorChange(noteDiv, i)});
+        colorDiv.addEventListener('click', () => { onClickHandleColorChange(noteDiv, i) });
 
     }
 
-    noteDiv.querySelector('.note-edit-button').addEventListener('click',()=>{onClickEditNote(noteDiv,saveHandler)});
+    noteDiv.querySelector('.note-edit-button').addEventListener('click', () => { onClickEditNote(noteDiv, saveHandler) });
 }
 
 // Resizes textarea to display all text without scroll(or scrollbar)
@@ -168,7 +168,7 @@ function initializeNoteHelper(noteDiv,deleteHandler,noteColors, saveHandler) {
 function expandTextArea(textArea) {
     textArea.style.height = 'auto';
     var size = textArea.scrollHeight + 15;
-    if (size < 200) size = 200; 
+    if (size < 200) size = 200;
     textArea.style.height = size + 'px';
     isotopeUpdate();
 }
@@ -201,11 +201,11 @@ function onClickEditNote(noteDiv, saveDataFunction) {
     } else { // Save data
         noteTitleElement.disabled = true;
         noteBodyElement.disabled = true;
-        
+
         saveDataFunction(noteDiv);
-        
+
         noteDiv.dataset.noteUnsavedChanges = '0';
-        
+
     }
 }
 

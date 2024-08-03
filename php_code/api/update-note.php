@@ -16,7 +16,7 @@ header('Content-Type: application/xml');
 if ($_SERVER['REQUEST_METHOD'] === 'UPDATE') {
     $rawPostData = file_get_contents('php://input');
     $xml = simplexml_load_string($rawPostData);
-    
+
     if ($xml === false) {
         http_response_code(400);
         sendResponse('Invalid XML');
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'UPDATE') {
 
     // Note updated
     $row = readNoteById($note_id);
-    
+
     http_response_code(200);
     sendResponse(
         '<note>
@@ -63,9 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'UPDATE') {
             <body>' . $row->body . '</body>
             <timeUpdated>' . $row->updated_at . '</timeUpdated>
             <timeCreated>' . $row->created_at . '</timeCreated>
-        </note>');
+        </note>'
+    );
     return;
 }
-
-
-?>

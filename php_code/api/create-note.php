@@ -16,7 +16,7 @@ header('Content-Type: application/xml');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rawPostData = file_get_contents('php://input');
     $xml = simplexml_load_string($rawPostData);
-    
+
     if ($xml === false) {
         http_response_code(400);
         sendResponse('Invalid XML');
@@ -54,13 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <body>' . $new_note->body . '</body>
                 <timeUpdated>' . $new_note->updated_at . '</timeUpdated>
                 <timeCreated>' . $new_note->created_at . '</timeCreated>
-            </note>');
+            </note>'
+        );
         return;
     }
-    
+
     http_response_code(400);
     sendResponse('Note type invalid');
 }
-
-
-?>

@@ -47,7 +47,7 @@ input:disabled {
 
 .note {
     width: 100px;
-    border: 4px solid rgba(255,255,255,0.4);
+    border: 4px solid rgba(255, 255, 255, 0.4);
     padding: 10px;
     margin: 10px;
     background: white;
@@ -58,7 +58,7 @@ input:disabled {
 .note:hover,
 .note[data-note-unsaved-changes="1"] {
     border-color: white;
-    box-shadow: 
+    box-shadow:
         0 0 10px rgba(255, 204, 0, 0.65);
     animation: note-edit-animation 1s linear 0s infinite;
 }
@@ -67,12 +67,15 @@ input:disabled {
     0% {
         border-color: white;
     }
+
     70% {
         border-color: white;
     }
+
     80% {
         border-color: #777;
     }
+
     100% {
         border-color: white;
     }
@@ -96,7 +99,7 @@ input:disabled {
 }
 
 .note-title::selection {
-    background-color: rgba(100,100,100,0.5);
+    background-color: rgba(100, 100, 100, 0.5);
     color: white;
 }
 
@@ -110,7 +113,7 @@ input:disabled {
 
 #new-note-body::selection,
 .note-body::selection {
-    background-color: rgba(100,100,100,0.5);
+    background-color: rgba(100, 100, 100, 0.5);
     color: white;
 }
 
@@ -128,12 +131,13 @@ input:disabled {
     justify-content: right;
     align-items: center;
     opacity: 0;
-    transition: opacity 400ms ease-in-out; 
-    visibility: hidden; 
+    transition: opacity 400ms ease-in-out;
+    visibility: hidden;
 }
 
 @media (pointer: coarse) {
-/* Styles for touch devices */
+
+    /* Styles for touch devices */
     .note-toolbar {
         opacity: 1;
         visibility: visible;

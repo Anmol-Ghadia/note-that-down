@@ -16,7 +16,7 @@ header('Content-Type: application/xml');
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $rawPostData = file_get_contents('php://input');
     $xml = simplexml_load_string($rawPostData);
-    
+
     if ($xml === false) {
         http_response_code(400);
         sendResponse('Invalid XML');
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     $note_id = (int) $xml->id;
     $username = $_SESSION['username'];
-    
+
     // Check user is owner
     $old_note = readNoteById($note_id);
     if ($old_note->username != $username) {
@@ -47,7 +47,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     http_response_code(202);
     sendResponse('');
     return;
-    
-}
 
-?>
+}
