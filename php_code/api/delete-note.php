@@ -2,11 +2,13 @@
 session_start();
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    echo '<response><status>401 Unathourized</status><message>Invalid session</message></response>';
+    http_response_code(401);
+    sendResponse('Unauthorized');
     return;
 }
 
 include '../sql.php';
+include '../helpers/api_helpers.php';
 
 // Set the content type for the response
 header('Content-Type: application/xml');
@@ -16,11 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $xml = simplexml_load_string($rawPostData);
     
     if ($xml === false) {
-        echo '
-        <response>
-            <status>400 Bad Request</status>
-            <message>Invalid XML</message>
-        </response>';
+        http_response_code(400);
+        sendResponse('Invalid XML');
         return;
     }
 
@@ -30,22 +29,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     // Check user is owner
     $old_note = readNoteById($note_id);
     if ($old_note->username != $username) {
-        $response = '<response><status>401 Unauthorized</status></response>';
-        echo $response;
+        http_response_code(401);
+        sendResponse('Unauthorized');
         return;
     }
 
     // Can Delete note
     $success = deleteNoteById($note_id);
     if (!$success) {
-        $response = '<response><status>500 Server Error</status></response>';
-        echo $response;
+        http_response_code(500);
+        sendResponse('Server Error (CODE:DELETE-0)');
         return;
     }
 
+
     // Note deleted
-    $response = '<response><status>200 OK</status></response>';
-    echo $response;
+    http_response_code(202);
+    sendResponse('');
     return;
     
 }
