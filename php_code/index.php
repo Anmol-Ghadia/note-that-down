@@ -79,7 +79,7 @@ include 'helpers/notes_params.php';
             }
 
             .typewriter-text::before {
-                top: 150%;
+                top: 15vh;
             }
         }
         
@@ -119,7 +119,7 @@ include 'helpers/notes_params.php';
             }
 
             .typewriter-text::before {
-                top: 300%;
+                top: 25vh;
             }
         }
 
