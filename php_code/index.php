@@ -340,7 +340,7 @@ include 'helpers/notes_params.php';
     function getDemoNotes() {
 
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', '/api/demo-notes.php', true);
+        xhr.open('GET', '/public/data/demo-notes.xml', true);
         xhr.setRequestHeader('Content-Type', 'application/xml');
         xhr.setRequestHeader('Accept', 'application/xml');
 
