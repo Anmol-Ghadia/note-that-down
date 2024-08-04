@@ -4,7 +4,7 @@ services:
     ports:
       - 80:80
     volumes:
-        - ./php_code/:/var/www/html/
+      - ./php_code/:/var/www/html/
 
   php:
     build: ./php_code/
@@ -12,14 +12,29 @@ services:
       - 9000
     volumes:
       - ./php_code/:/var/www/html/
+    secrets:
+      - mysql_username
+      - mysql_user_password
 
-  db:    
-    image: mariadb  
-    volumes: 
+  db:
+    image: mariadb
+    volumes:
       - ./mariadb-data:/var/lib/mysql
       - ./mariadb:/docker-entrypoint-initdb.d
-    environment:  
-      MYSQL_ROOT_PASSWORD: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
       MYSQL_DATABASE: notes
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_USER_FILE: /run/secrets/mysql_username
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_user_password
+    secrets:
+      - mysql_root_password
+      - mysql_username
+      - mysql_user_password
+
+secrets:
+  mysql_root_password:
+    file: secrets/mysql_root_password.txt
+  mysql_username:
+    file: secrets/mysql_username.txt
+  mysql_user_password:
+    file: secrets/mysql_user_password.txt

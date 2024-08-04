@@ -1,7 +1,7 @@
 <?php
 $servername = "db";
-$server_username = "user";
-$server_password = "password";
+$server_username = file_get_contents('/run/secrets/mysql_username');
+$server_password = file_get_contents('/run/secrets/mysql_user_password');
 $server_database = "notes";
 
 try {

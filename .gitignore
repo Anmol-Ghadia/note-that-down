@@ -1,2 +1,4 @@
 mariadb-data/*
 !mariadb-data/.gitkeep
+secrets/*.txt
+!secrets/.gitkeep
