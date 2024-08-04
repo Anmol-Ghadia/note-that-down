@@ -1,62 +1,48 @@
-On intial startup of database:
-```sh
-docker exec -it <db container id or name> /bin/sh
-mariadb -u root -p<password>
+# Note That Down!
+Welcome to Note That Down!, a stylish and functional note-taking web application that helps you keep your thoughts organized and visually appealing.
 
-CREATE USER 'rapidcode'@'%' IDENTIFIED BY "rapidcode123";
-GRANT ALL PRIVILEGES ON *.* TO 'rapidcode'@'%';
-FLUSH PRIVILEGES;
-exit
-exit
-```
+## Features
+1) User Authentication: Securely sign up and log in to manage your personal notes.
+1) Colorful Notes: Customize your notes with a variety of colors to make them stand out.
+1) Visual Layout: Enjoy a clean, masonry-style layout that arranges your notes in a dynamic and engaging way.
 
-# entering db's shell
-```sh
-docker exec -it <db container id or name> /bin/sh
-mariadb -u root -p<password>
-```
+## Technology Stack
+- Backend: PHP
+- Database: MariaDB
 
-```SQL
-CREATE USER 'backend'@'%' IDENTIFIED BY "mariadb";
-GRANT ALL PRIVILEGES ON 'notedb'.* TO 'backend'@'%';
-FLUSH PRIVILEGES;
-```
+## Developer Guide
+To get started, clone the repository and follow the installation instructions below.
 
-```SQL
-CREATE TABLE users (
-    username VARCHAR(20) PRIMARY KEY,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    hash VARCHAR(255) NOT NULL
-);
-```
+1) Clone the repository
+    ```bash
+    git clone https://github.com/yourusername/note-that-down.git
+    cd note-that-down
+    ```
+1) Install [docker](https://docs.docker.com/engine/install/) along with [docker-compose](https://docs.docker.com/compose/install/) if not already installed
+1) Set up mysql environment variables
+    ```bash
+    echo "Your-mysql-root-password-here" > secrets/mysql_root_password.txt
+    echo "Your-mysql-username-here" > secrets/mysql_username.txt
+    echo "Your-mysql-user-password-here" > secrets/mysql_user_password.txt
+    ```
+1) Start the swarm using docker-compose
+    ```bash
+    docker-compose up -d
+    ```
 
+The web app is now running and accessible at [http://localhost:80](http://localhost:80)
+> Note: Give few minutes for mariadb container to initialize and become availble on first startup.
 
-<!-- ```SQL
-CREATE TABLE notes (
-    note_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(20) NOT NULL,
-    content TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (username) REFERENCES users(username)
-);
-``` -->
+### Optional
+The following steps are **not required** but might be handy for debugging
+1) You can log into the database by first entering the docker container's shell
+    ```sh
+    docker exec -it <db container id or name> /bin/sh
+    ```
 
-```SQL
-CREATE TABLE notes (
-    note_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(20) NOT NULL,
-    content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-    color CHAR(6) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CHECK (LENGTH(color) = 6 AND color REGEXP '^[0-9A-Fa-f]{6}$'),
-    FOREIGN KEY (username) REFERENCES users(username)
-);
-```
+1) Then executing the following to log into mariadb server
+    ```sh
+    mariadb -u root -p<password>
+    ```
 
-
-optional
-```SQL
-SHOW GRANTS FOR 'user1'@localhost;
-```
+> Note: Make sure to replace '< password >' and '< db container id or name >' with appropriate values
