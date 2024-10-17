@@ -1,20 +1,24 @@
 services:
-  nginx:
+  nginx_notes:
     build: ./nginx/
-    ports:
+    ports:    # might need to be disabled for prod.
       - 80:80
     volumes:
       - ./php_code/:/var/www/html/
+    networks:
+      - prod-net
 
   php:
     build: ./php_code/
-    expose:
-      - 9000
+    #expose:
+    #  - 9000
     volumes:
       - ./php_code/:/var/www/html/
-    secrets:
-      - mysql_username
-      - mysql_user_password
+    # secrets:
+      # - mysql_username
+      # - mysql_user_password
+    networks:
+      - prod-net
 
   db:
     image: mariadb
@@ -24,17 +28,26 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
       MYSQL_DATABASE: notes
-      MYSQL_USER_FILE: /run/secrets/mysql_username
-      MYSQL_PASSWORD_FILE: /run/secrets/mysql_user_password
+      # MYSQL_USER_FILE: /run/secrets/mysql_username
+      # MYSQL_PASSWORD_FILE: /run/secrets/mysql_user_password
     secrets:
       - mysql_root_password
-      - mysql_username
-      - mysql_user_password
+      # - mysql_username
+      # - mysql_user_password
+    networks:
+      - prod-net
 
 secrets:
   mysql_root_password:
     file: secrets/mysql_root_password.txt
-  mysql_username:
-    file: secrets/mysql_username.txt
-  mysql_user_password:
-    file: secrets/mysql_user_password.txt
+  # mysql_username:
+  #   file: secrets/mysql_username.txt
+  # mysql_user_password:
+  #   file: secrets/mysql_user_password.txt
+
+# PROD is commented out
+networks:
+  prod-net:
+    name: mono-hoster_prod-net
+    driver: bridge  # comment out in prod
+#    external: true # prod

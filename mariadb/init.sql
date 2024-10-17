@@ -1,3 +1,10 @@
+CREATE USER 'user'@'*' IDENTIFIED BY 'pass';
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'*' IDENTIFIED BY 'pass';
+CREATE USER 'user'@'localhost' IDENTIFIED BY 'pass';
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'localhost' IDENTIFIED BY 'pass';
+CREATE USER 'user'@'%' IDENTIFIED BY 'pass';
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'%' IDENTIFIED BY 'pass';
+
 USE notes;
 
 CREATE TABLE users (
