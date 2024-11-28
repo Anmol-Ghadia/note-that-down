@@ -32,6 +32,8 @@ services:
     environment:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_POLL_INTERVAL=60
+    networks:
+      - prod-net
 
 secrets:
   mysql_root_password:
