@@ -1,0 +1,42 @@
+services:
+  notes_nginx:
+    build: ./nginx/
+    volumes:
+      - ./php_code/:/var/www/html/
+    networks:
+      - prod-net
+
+  notes_php:
+    build: ./php_code/
+    volumes:
+      - ./php_code/:/var/www/html/
+    networks:
+      - prod-net
+
+  notes_db:
+    image: mariadb
+    volumes:
+      - ./mariadb-data:/var/lib/mysql
+      - ./mariadb:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_DATABASE: notes
+    secrets:
+      - mysql_root_password
+    networks:
+      - prod-net
+  notes_watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=60
+
+secrets:
+  mysql_root_password:
+    file: secrets/mysql_root_password.txt
+
+networks:
+  prod-net:
+   external: true

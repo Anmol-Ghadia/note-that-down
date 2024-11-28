@@ -27,11 +27,17 @@ To get started, clone the repository and follow the installation instructions be
     ```
 1) Start the swarm using docker-compose
     ```bash
-    docker-compose up -d
+    docker-compose -f docker-compose.dev.yml up -d
     ```
 
 The web app is now running and accessible at [http://localhost:80](http://localhost:80)
 > Note: Give few minutes for mariadb container to initialize and become availble on first startup.
+
+## Production guide
+1) same as developer guide, except the prod version of `docker-compose` command is used:
+    ```sh
+    docker-compose -f docker-compose.prod.yml up -d
+    ```
 
 ### Optional
 The following steps are **not required** but might be handy for debugging

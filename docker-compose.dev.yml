@@ -1,0 +1,27 @@
+services:
+  nginx_notes:
+    build: ./nginx/
+    ports:
+      - 80:80
+    volumes:
+      - ./php_code/:/var/www/html/
+
+  php:
+    build: ./php_code/
+    volumes:
+      - ./php_code/:/var/www/html/
+
+  db:
+    image: mariadb
+    volumes:
+      - ./mariadb-data:/var/lib/mysql
+      - ./mariadb:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_DATABASE: notes
+    secrets:
+      - mysql_root_password
+
+secrets:
+  mysql_root_password:
+    file: secrets/mysql_root_password.txt
