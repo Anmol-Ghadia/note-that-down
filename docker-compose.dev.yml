@@ -1,10 +1,13 @@
 services:
   notes_nginx:
-    build: ./nginx/
+    image: nginx:latest
     ports:
       - 80:80
     volumes:
-      - ./php_code/:/var/www/html/
+      - ./nginx/default.conf:/etc/nginx/nginx.conf/:ro
+    depends_on:
+      - notes_php
+      - notes_db
 
   notes_php:
     build: ./php_code/
