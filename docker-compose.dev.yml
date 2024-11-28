@@ -1,17 +1,17 @@
 services:
-  nginx_notes:
+  notes_nginx:
     build: ./nginx/
     ports:
       - 80:80
     volumes:
       - ./php_code/:/var/www/html/
 
-  php:
+  notes_php:
     build: ./php_code/
     volumes:
       - ./php_code/:/var/www/html/
 
-  db:
+  notes_db:
     image: mariadb
     volumes:
       - ./mariadb-data:/var/lib/mysql
