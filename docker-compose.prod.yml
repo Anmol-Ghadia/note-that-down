@@ -3,6 +3,7 @@ services:
     image: nginx:latest
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./php_code/public:/var/www/html/public:ro
     depends_on:
       - notes_php
       - notes_db
@@ -28,15 +29,6 @@ services:
       - mysql_root_password
     networks:
       - prod-net
-  # notes_watchtower:
-  #   image: containrrr/watchtower
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   environment:
-  #     - WATCHTOWER_CLEANUP=true
-  #     - WATCHTOWER_POLL_INTERVAL=60
-  #   networks:
-  #     - prod-net
 
 secrets:
   mysql_root_password:
